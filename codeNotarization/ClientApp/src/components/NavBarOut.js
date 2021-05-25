@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import logo from './images/logo_consultaJa.png';
+import logo from './images/logo_blocknotarization.png';
 
 export class NavBarOut extends Component {
     static displayName = NavBarOut.name;

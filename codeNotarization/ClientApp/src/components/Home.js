@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+Ôªøimport React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 
@@ -53,7 +53,7 @@ export class Home extends Component {
                         }}>
                         <div className="absolute top-0 w-full h-full bg-center bg-cover"
                             style={{
-                                backgroundImage: "url('https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1189&q=80')"
+                                backgroundImage: "url('https://www.autoescolaonline.net/wp-content/uploads/2018/11/post-desburocratizacao.jpg')"
                             }}>
                             <span id="blackOverlay" className="w-full h-full absolute opacity-75 bg-black"></span>
                         </div>
@@ -68,11 +68,12 @@ export class Home extends Component {
                                             style={{ maxWidth: "60px" }}
                                         />
                                         <h1 className="text-white font-semibold text-5xl">
-                                            Consulta J·!
+                                            BlockNotarization
                                         </h1>
                                         <p className="mt-4 text-lg text-gray-300">
-                                            Seja bem vindo ‡ nossa plataforma de consultas ao domicÌlio.
-                                            Crie uma conta e comece j· a usufruir de todos os nossos serviÁos!
+                                            Seja bem vindo √† nossa plataforma de notariza√ß√£o de documentos usando a tecnologia BlockChain!
+                                            Use o Metamask para efetuar login na aplica√ß√£o e come√ße j√° a notarizar os seus documentos!
+                                            Ou ent√£o verifique a integridade de documentos sem necessidade de login na aplica√ß√£o!
                                         </p>
                                     </div>
                                 </div>
@@ -108,9 +109,9 @@ export class Home extends Component {
                                             <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-red-500">
                                                 <FontAwesomeIcon icon="briefcase-medical" />
                                             </div>
-                                            <h6 className="text-xl font-semibold">Os Nossos ServiÁos</h6>
+                                            <h6 className="text-xl font-semibold">Os Nossos Servi√ßos</h6>
                                             <p className="mt-2 mb-4 text-gray-600">
-                                                Consultas ao domicÌlio, combinadas entre mÈdicos e
+                                                Consultas ao domic√≠lio, combinadas entre m√©dicos e
                                                 clientes/pacientes, de forma a garantir o maior conforto aos nossos clientes.
                                             </p>
                                         </div>
@@ -127,7 +128,7 @@ export class Home extends Component {
                                                 Quem Somos?
                                             </h6>
                                             <p className="mt-2 mb-4 text-gray-600">
-                                                Somos uma empresa empenhada em fornecer os melhores cuidados de sa˙de possiveis ‡ populaÁ„o em geral sem a
+                                                Somos uma empresa empenhada em fornecer os melhores cuidados de sa√∫de possiveis √† popula√ß√£o em geral sem a
                                                 necessidade de se descolarem e esperarem em grandes filas.
                                             </p>
                                         </div>
@@ -144,7 +145,7 @@ export class Home extends Component {
                                                 O que fazemos?
                                             </h6>
                                             <p className="mt-2 mb-4 text-gray-600">
-                                                O nosso objetivo È promover o bem-estar ‡s pessoas da melhor forma possivel. Todos os dias trabalhamos para desenvolver novas ferramentas para oferecer mais recursos
+                                                O nosso objetivo √© promover o bem-estar √†s pessoas da melhor forma possivel. Todos os dias trabalhamos para desenvolver novas ferramentas para oferecer mais recursos
                                                 e funcionalidades deste projeto aos nossos clientes.
                                             </p>
                                         </div>
@@ -158,14 +159,14 @@ export class Home extends Component {
                                         <FontAwesomeIcon icon="user-friends" />
                                     </div>
                                     <h3 className="text-3xl mb-2 font-semibold leading-normal">
-                                        O MÈdico vai a sua casa!
+                                        O M√©dico vai a sua casa!
                                     </h3>
                                     <p className="text-lg font-light leading-relaxed mt-4 mb-4 text-gray-700">
-                                        Para quÍ esperar em filas de espera quando pode ser avaliado por um profissional em casa?
-                                        Com o ConsultaJa pode requisitar uma consulta sem sair do conforto da sua habitaÁ„o.
+                                        Para qu√™ esperar em filas de espera quando pode ser avaliado por um profissional em casa?
+                                        Com o ConsultaJa pode requisitar uma consulta sem sair do conforto da sua habita√ß√£o.
                                     </p>
                                     <p className="text-lg font-light leading-relaxed mt-0 mb-4 text-gray-700">
-                                        Inscreva-se j· e comeÁe a receber assitÍncia disponÌvel 24 horas por dia, 7 dias por semana.
+                                        Inscreva-se j√° e come√ße a receber assit√™ncia dispon√≠vel 24 horas por dia, 7 dias por semana.
                                     </p>
                                 </div>
                                 <div className="w-full md:w-4/12 px-4 mr-auto ml-auto">
@@ -192,10 +193,10 @@ export class Home extends Component {
                                                 ></polygon>
                                             </svg>
                                             <h4 className="text-xl font-bold text-black text-center">
-                                                ServiÁos de qualidade garantida
+                                                Servi√ßos de qualidade garantida
                     </h4>
                                             <p className="text-md font-light mt-2 text-black text-center">
-                                                Os profissionais de sa˙de do ConsultaJa est„o preparados para qualquer tipo de situaÁ„o e s„o aprovados e referenciados pela Ordem dos MÈdicos.
+                                                Os profissionais de sa√∫de do ConsultaJa est√£o preparados para qualquer tipo de situa√ß√£o e s√£o aprovados e referenciados pela Ordem dos M√©dicos.
                     </p>
                                         </blockquote>
                                     </div>
