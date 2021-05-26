@@ -107,12 +107,12 @@ export class Home extends Component {
                                     <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
                                         <div className="px-4 py-5 flex-auto">
                                             <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-red-500">
-                                                <FontAwesomeIcon icon="briefcase-medical" />
+                                                <FontAwesomeIcon icon="file-contract" />
                                             </div>
                                             <h6 className="text-xl font-semibold">Os Nossos Serviços</h6>
                                             <p className="mt-2 mb-4 text-gray-600">
-                                                Consultas ao domicílio, combinadas entre médicos e
-                                                clientes/pacientes, de forma a garantir o maior conforto aos nossos clientes.
+                                                Notarização de documentos, nomeadamente provas relacionadas com a 
+                                                existência ou propriedade de um documento, bem como transferências de propriedade.
                                             </p>
                                         </div>
                                     </div>
@@ -122,14 +122,15 @@ export class Home extends Component {
                                     <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
                                         <div className="px-4 py-5 flex-auto">
                                             <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-blue-700">
-                                                <FontAwesomeIcon icon="user-md" />
+                                                <FontAwesomeIcon icon="users" />
                                             </div>
                                             <h6 className="text-xl font-semibold">
                                                 Quem Somos?
                                             </h6>
                                             <p className="mt-2 mb-4 text-gray-600">
-                                                Somos uma empresa empenhada em fornecer os melhores cuidados de saúde possiveis à população em geral sem a
-                                                necessidade de se descolarem e esperarem em grandes filas.
+                                                Somos uma plataforma de Notarização de documentos tendo por base a 
+                                                tecnologia Blockchain que foi desenvolvida na Universidade do Minho 
+                                                por um grupo de 2 estudantes de Engenharia Informática.
                                             </p>
                                         </div>
                                     </div>
@@ -145,63 +146,30 @@ export class Home extends Component {
                                                 O que fazemos?
                                             </h6>
                                             <p className="mt-2 mb-4 text-gray-600">
-                                                O nosso objetivo é promover o bem-estar às pessoas da melhor forma possivel. Todos os dias trabalhamos para desenvolver novas ferramentas para oferecer mais recursos
-                                                e funcionalidades deste projeto aos nossos clientes.
+                                                O nosso objetivo é garantir que alguém que queira verificar a 
+                                                autenticidade de um documento ou então autenticar os seus próprios
+                                                documentos tenha uma forma segura e rápida de o fazer.
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="flex flex-wrap items-center mt-32">
-                                <div className="w-full md:w-5/12 px-4 mr-auto ml-auto">
-                                    <div className="text-gray-600 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-gray-100">
-                                        <FontAwesomeIcon icon="user-friends" />
-                                    </div>
-                                    <h3 className="text-3xl mb-2 font-semibold leading-normal">
-                                        O Médico vai a sua casa!
-                                    </h3>
-                                    <p className="text-lg font-light leading-relaxed mt-4 mb-4 text-gray-700">
-                                        Para quê esperar em filas de espera quando pode ser avaliado por um profissional em casa?
-                                        Com o ConsultaJa pode requisitar uma consulta sem sair do conforto da sua habitação.
-                                    </p>
-                                    <p className="text-lg font-light leading-relaxed mt-0 mb-4 text-gray-700">
-                                        Inscreva-se já e começe a receber assitência disponível 24 horas por dia, 7 dias por semana.
-                                    </p>
+                            <div className="w-full px-4 mr-auto ml-auto my-6">
+                                <div className="text-gray-600 p-8 text-center inline-flex items-center justify-center w-20 h-20 mb-8 shadow-lg rounded-full bg-gray-100">
+                                    <FontAwesomeIcon icon="file-signature" />
                                 </div>
-                                <div className="w-full md:w-4/12 px-4 mr-auto ml-auto">
-                                    <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-lg bg-pink-600">
-                                        <img
-                                            alt="..."
-                                            src="https://images.unsplash.com/photo-1585139786570-905b59b4fddf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80"
-                                            className="w-full align-middle rounded-t-lg"
-                                        />
-                                        <blockquote className="relative p-8 mb-4">
-                                            <svg
-                                                preserveAspectRatio="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 583 95"
-                                                className="absolute left-0 w-full block"
-                                                style={{
-                                                    height: "95px",
-                                                    top: "-94px"
-                                                }}
-                                            >
-                                                <polygon
-                                                    points="-30,95 583,95 583,65"
-                                                    className="text-pink-600 fill-current"
-                                                ></polygon>
-                                            </svg>
-                                            <h4 className="text-xl font-bold text-black text-center">
-                                                Serviços de qualidade garantida
-                    </h4>
-                                            <p className="text-md font-light mt-2 text-black text-center">
-                                                Os profissionais de saúde do ConsultaJa estão preparados para qualquer tipo de situação e são aprovados e referenciados pela Ordem dos Médicos.
-                    </p>
-                                        </blockquote>
+                                <h3 className="text-3xl mb-2 font-bold items-center justify-center leading-normal">
+                                    Notarize e verifique a autenticidade de um documento com poucos cliques, usando BlockNotarization.
+                                </h3>
+                                <div class="flex flex-wrap -mx-3 my-3 ">
+                                    <div class="w-full px-3 mb-6 md:mb-0">
+                                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-name" name='name' type="text" placeholder="Insira aqui o Hash do documento a procurar..." onChange={this.myChangeHandler} required />
                                     </div>
+                                    <button class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-3 px-4 rounded mb-10 mx-3 my-3" type="submit">
+                                        Verificar
+                                    </button>
                                 </div>
-
                             </div>
                         </div>
                     </section>

@@ -3,6 +3,7 @@ import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLi
 import { Link } from 'react-router-dom';
 
 import { Rodape } from './Rodape';
+import LogoS from './images/logo.png';
 import { NavBarOut } from './NavBarOut';
 
 export class Privacy extends Component {
@@ -13,18 +14,37 @@ export class Privacy extends Component {
             <>
                 <NavBarOut />
                 <main>
-                    <section className="relative block" style={{ height: "400px" }}>
-                        <div
-                            className="absolute top-0 w-full h-full bg-center bg-cover"
+                    <div className="relative pt-16 pb-32 flex content-center items-center justify-center"
+                        style={{
+                            minHeight: "60vh"
+                        }}>
+                        <div className="absolute top-0 w-full h-full bg-center bg-cover"
                             style={{
-                                backgroundImage:
-                                    "url('https://www.autoescolaonline.net/wp-content/uploads/2018/11/post-desburocratizacao.jpg')"
-                            }}
-                        >
-                            <span
-                                id="blackOverlay"
-                                className="w-full h-full absolute opacity-75 bg-black"
-                            ></span>
+                                backgroundImage: "url('https://www.autoescolaonline.net/wp-content/uploads/2018/11/post-desburocratizacao.jpg')"
+                            }}>
+                            <span id="blackOverlay" className="w-full h-full absolute opacity-75 bg-black"></span>
+                        </div>
+                        <div className="container relative mx-auto">
+                            <div className="items-center flex flex-wrap">
+                                <div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
+                                    <div className="pr-12">
+                                        <img
+                                            alt="..."
+                                            src={LogoS}
+                                            className=" rounded-full mx-auto"
+                                            style={{ maxWidth: "60px" }}
+                                        />
+                                        <h1 className="text-white font-semibold text-5xl">
+                                            BlockNotarization
+                                        </h1>
+                                        <p className="mt-4 text-lg text-gray-300">
+                                            Seja bem vindo à nossa plataforma de notarização de documentos usando a tecnologia BlockChain!
+                                            Use o Metamask para efetuar login na aplicação e começe já a notarizar os seus documentos!
+                                            Ou então verifique a integridade de documentos sem necessidade de login na aplicação!
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div
                             className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden"
@@ -32,6 +52,7 @@ export class Privacy extends Component {
                         >
                             <svg
                                 className="absolute bottom-0 overflow-hidden"
+                                xmlns="http://www.w3.org/2000/svg"
                                 preserveAspectRatio="none"
                                 version="1.1"
                                 viewBox="0 0 2560 100"
@@ -44,7 +65,8 @@ export class Privacy extends Component {
                                 ></polygon>
                             </svg>
                         </div>
-                    </section>
+                    </div>
+
                     <section className="pb-20 bg-gray-300 -mt-24">
                         <div className="container mx-auto px-4">
                             <h1 className="text-4xl font-semibold leading-normal mb-4 text-gray-800 mb-2"> Privacy </h1>
