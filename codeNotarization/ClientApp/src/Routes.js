@@ -1,6 +1,7 @@
 ﻿import React from "react";
 import { Home } from './components/Home';
 import { Privacy } from "./components/Privacy";
+import { InfoDocument } from "./components/InfoDocument";
 
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import decode from 'jwt-decode';
@@ -108,6 +109,7 @@ const Routes = () => (
         <Switch>
             <AuthRoute exact path='/' component={Home} />
             <AuthRoute exact path='/privacy' component={Privacy} />
+            <AuthRoute exact path='/info' component={InfoDocument} />
         </Switch>
     </BrowserRouter>
 );

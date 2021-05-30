@@ -21,10 +21,40 @@ export class Home extends Component {
 
     mySubmitHandler = (event) => {
         event.preventDefault();
-        let age = this.state.age;
-        if (!Number(age)) {
-            alert("Your age must be a number");
+        /*
+        if (!this.state.senha) {
+            this.setState({ error1: "Preencha as senhas para continuar!" });
+        } else {
+            axios.post(`${ADMIN_URL}/login`, {
+                Senha: this.state.senha
+            })
+                .then(response => {
+                    alert("Successfully logged in!!!");
+                    console.log(response);
+                    this.state.valido = true;
+                    this.setState({ dadosContaAdmin: response.data });
+                    localStorage.clear();
+                    localStorage.setItem("token", this.state.dadosContaAdmin.token);
+                    if (this.state.dadosContaAdmin.type[0] == 'A') {
+                        this.state.type = "Admin";
+                        this.props.history.push("/perfilAdmin");
+                    } else {
+                        this.setState({
+                            error1:
+                                "Houve um problema com o login, verifique as suas senhas."
+                        });
+                    }
+                })
+                .catch(error => {
+                    this.setState({
+                        error1:
+                            "Houve um problema com o login, verifique as suas senhas."
+                    });
+                    console.log(error);
+                })
         }
+        */
+        this.props.history.push("/info");
     }
 
     myChangeHandler = (event) => {
@@ -162,14 +192,22 @@ export class Home extends Component {
                                 <h3 className="text-3xl mb-2 font-bold items-center justify-center leading-normal">
                                     Notarize e verifique a autenticidade de um documento com poucos cliques, usando BlockNotarization.
                                 </h3>
-                                <div class="flex flex-wrap -mx-3 my-3 ">
-                                    <div class="w-full px-3 mb-6 md:mb-0">
-                                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-name" name='name' type="text" placeholder="Insira aqui o Hash do documento a procurar..." onChange={this.myChangeHandler} required />
+                                <form onSubmit={this.mySubmitHandler}>
+                                    <div class="flex flex-wrap -mx-3 my-3 ">
+                                        <div class="w-full px-3 mb-6 md:mb-0">
+                                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-name" name='name' type="text" placeholder="Insira aqui o Hash do documento a procurar..." onChange={this.myChangeHandler} required />
+                                        </div>
+                                        <div className="text-center mt-6">
+                                            <button
+                                                class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-3 px-4 rounded mb-10 mx-3 my-3"
+                                                type="submit"
+                                                style={{ transition: "all .15s ease" }}
+                                            >
+                                                    Verificar
+                                            </button>
+                                        </div>
                                     </div>
-                                    <button class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-3 px-4 rounded mb-10 mx-3 my-3" type="submit">
-                                        Verificar
-                                    </button>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </section>
