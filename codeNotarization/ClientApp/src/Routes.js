@@ -9,6 +9,7 @@ import { Perfil } from "./components/Perfil";
 import { Documentos } from "./components/Documentos";
 import { RegistarDoc } from "./components/RegistarDoc";
 import { Logout } from "./components/Logout";
+import { Login } from "./components/Login";
 
 
 //const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -118,6 +119,7 @@ const Routes = () => (
             <AuthRoute exact path='/perfil' component={Perfil} />
             <AuthRoute exact path='/documentos' component={Documentos} />
             <AuthRoute exact path='/registarDoc' component={RegistarDoc} />
+            <AuthRoute exact path='/login' component={Login} />
             <AuthRoute exact path='/logout' component={Logout} />
         </Switch>
     </BrowserRouter>

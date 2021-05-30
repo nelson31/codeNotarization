@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-
+import Web3 from 'web3'
+import { BLOCK_NOTARIZATION_ABI, BLOCK_NOTARIZATION_ADDRESS } from './configWeb3.js'
 
 import LogoS from './images/logo.png';
 import { Rodape } from './Rodape.js';
@@ -11,11 +12,34 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 export class Home extends Component {
     static displayName = Home.name;
 
+    componentWillMount() {
+        this.loadBlockchainData()
+    }
+
+    async loadBlockchainData() {
+        const web3 = new Web3(Web3.givenProvider || "http://localhost:8545")
+        const accounts = await web3.eth.getAccounts()
+        this.setState({ account: accounts[0] })
+        const todoList = new web3.eth.Contract(BLOCK_NOTARIZATION_ABI, BLOCK_NOTARIZATION_ADDRESS)
+        this.setState({ todoList })
+        const notarizationsCount = await todoList.methods.notarizationsCount().call()
+        this.setState({ notarizationsCount })
+        for (var i = 1; i <= notarizationsCount; i++) {
+            const task = await todoList.methods.notarizations(i).call()
+            this.setState({
+                notarizations: [...this.state.notarizations, task]
+            })
+        }
+        this.setState({ loading: false })
+    }
+
     constructor(props) {
         super(props);
         this.state = {
-            username: '',
-            age: null,
+            account: '',
+            notarizationsCount: 0,
+            notarizations: [],
+            loading: true
         };
     }
 
@@ -99,6 +123,9 @@ export class Home extends Component {
                                         />
                                         <h1 className="text-white font-semibold text-5xl">
                                             BlockNotarization
+                                        </h1>
+                                        <h1 className="text-white font-semibold text-3xl">
+                                            {this.state.account}
                                         </h1>
                                         <p className="mt-4 text-lg text-gray-300">
                                             Seja bem vindo à nossa plataforma de notarização de documentos usando a tecnologia BlockChain!

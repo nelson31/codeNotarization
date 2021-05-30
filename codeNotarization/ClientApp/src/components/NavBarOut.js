@@ -1,7 +1,10 @@
 ﻿import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import Web3 from 'web3'
+import { BLOCK_NOTARIZATION_ABI, BLOCK_NOTARIZATION_ADDRESS } from './configWeb3.js'
 import logo from './images/logo_blocknotarization.png';
+
 
 export class NavBarOut extends Component {
     static displayName = NavBarOut.name;
@@ -11,7 +14,8 @@ export class NavBarOut extends Component {
 
         this.toggleNavbar = this.toggleNavbar.bind(this);
         this.state = {
-            collapsed: true
+            collapsed: true,
+            loading: false
         };
     }
 
@@ -47,7 +51,7 @@ export class NavBarOut extends Component {
                             <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
 
                                 <li className="flex items-center">
-                                    <Link tag={Link} className="links" to="/perfil">
+                                    <Link tag={Link} className="links" to="/login">
                                         <button
                                             className="bg-white text-gray-800 active:bg-gray-100 text-s font-bold uppercase px-8 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-8"
 
