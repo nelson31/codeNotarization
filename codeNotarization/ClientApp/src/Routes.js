@@ -1,10 +1,15 @@
 ﻿import React from "react";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import decode from 'jwt-decode';
+
 import { Home } from './components/Home';
 import { Privacy } from "./components/Privacy";
 import { InfoDocument } from "./components/InfoDocument";
+import { Perfil } from "./components/Perfil";
+import { Documentos } from "./components/Documentos";
+import { RegistarDoc } from "./components/RegistarDoc";
+import { Logout } from "./components/Logout";
 
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import decode from 'jwt-decode';
 
 //const PrivateRoute = ({ component: Component, ...rest }) => (
 //    <Route {...rest} render={props => (
@@ -110,6 +115,10 @@ const Routes = () => (
             <AuthRoute exact path='/' component={Home} />
             <AuthRoute exact path='/privacy' component={Privacy} />
             <AuthRoute exact path='/info' component={InfoDocument} />
+            <AuthRoute exact path='/perfil' component={Perfil} />
+            <AuthRoute exact path='/documentos' component={Documentos} />
+            <AuthRoute exact path='/registarDoc' component={RegistarDoc} />
+            <AuthRoute exact path='/logout' component={Logout} />
         </Switch>
     </BrowserRouter>
 );
