@@ -24,7 +24,7 @@ namespace codeNotarization.DataBase
 			string server = "localhost";
 			string database = "notarization_db";
 			string uid = "root";
-			string password = "pass12345";
+			string password = "miguelrso1999";
 			this.connectionstring = "SERVER=" + server + ";" + "DATABASE=" +
 			database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
 		}
@@ -38,6 +38,28 @@ namespace codeNotarization.DataBase
 			if (RegisterDAO.inst == null)
 				RegisterDAO.inst = new RegisterDAO();
 			return RegisterDAO.inst;
+		}
+
+		/**
+		 * Método que nos diz se determinado user já se 
+		 * encontra registado na base de dados
+		 */
+		public bool contains(String address)
+		{
+			MySqlConnection connection = new MySqlConnection(this.connectionstring);
+			connection.Open();
+			DataTable dt = new DataTable();
+
+			StringBuilder sb = new StringBuilder();
+			sb.Append("select * from registers where addrRegister='");
+			sb.Append(address);
+			sb.Append("'");
+
+			MySqlDataAdapter msda = new MySqlDataAdapter(sb.ToString(), connection);
+
+			msda.Fill(dt);
+
+			return dt.Rows.Count == 1;
 		}
 
 		/**
@@ -88,7 +110,8 @@ namespace codeNotarization.DataBase
 				telemovel = dt.Rows[0].Field<String>("telemovel");
 				pais = dt.Rows[0].Field<String>("pais");
 				cidade = dt.Rows[0].Field<String>("cidade");
-			} else
+			}
+			else
 			{
 				connection.Close();
 				throw new UserNotRegistedException("[Error] address '" + address + "' não existe na BD");
@@ -136,6 +159,72 @@ namespace codeNotarization.DataBase
 			foreach (Document d in register.getDocumentos())
 			{
 				documentDAO.put(d.getHash(), d);
+			}
+		}
+
+		/**
+		 * Método que incrementa o número de documentos de um determinado register
+		 */
+		public void increaseNumDocs(String address)
+		{
+			MySqlConnection connection = new MySqlConnection(this.connectionstring);
+			connection.Open();
+			DataTable dt = new DataTable();
+
+			StringBuilder sb = new StringBuilder();
+			sb.Append("select numeroDocs from registers where addrRegister='");
+			sb.Append(address);
+			sb.Append("'");
+
+			MySqlDataAdapter msda = new MySqlDataAdapter(sb.ToString(), connection);
+
+			msda.Fill(dt);
+
+			if (dt.Rows.Count == 1)
+			{
+				int numDocs = dt.Rows[0].Field<int>("numeroDocs");
+				sb.Clear();
+				sb.Append("update registers set numeroDocs=");
+				sb.Append(numDocs + 1);
+				sb.Append(" where addrRegister='");
+				sb.Append(address);
+				sb.Append("'");
+
+				msda = new MySqlDataAdapter(sb.ToString(), connection);
+				msda.Fill(dt);
+			}
+		}
+
+		/**
+		 * Método que incrementa o número de documentos de um determinado register
+		 */
+		public void decreaseNumDocs(String address)
+		{
+			MySqlConnection connection = new MySqlConnection(this.connectionstring);
+			connection.Open();
+			DataTable dt = new DataTable();
+
+			StringBuilder sb = new StringBuilder();
+			sb.Append("select numeroDocs from registers where addrRegister='");
+			sb.Append(address);
+			sb.Append("'");
+
+			MySqlDataAdapter msda = new MySqlDataAdapter(sb.ToString(), connection);
+
+			msda.Fill(dt);
+
+			if (dt.Rows.Count == 1)
+			{
+				int numDocs = dt.Rows[0].Field<int>("numeroDocs");
+				sb.Clear();
+				sb.Append("update registers set numeroDocs=");
+				sb.Append(numDocs - 1);
+				sb.Append(" where addrRegister='");
+				sb.Append(address);
+				sb.Append("'");
+
+				msda = new MySqlDataAdapter(sb.ToString(), connection);
+				msda.Fill(dt);
 			}
 		}
 	}

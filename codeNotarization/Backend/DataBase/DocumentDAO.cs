@@ -38,6 +38,28 @@ namespace codeNotarization.DataBase
 		}
 
 		/**
+		 * Método que nos diz se determinado documento já se 
+		 * encontra registado na base de dados
+		 */
+		public bool contains(String hash)
+		{
+			MySqlConnection connection = new MySqlConnection(this.connectionstring);
+			connection.Open();
+			DataTable dt = new DataTable();
+
+			StringBuilder sb = new StringBuilder();
+			sb.Append("select * from documents where hash='");
+			sb.Append(hash);
+			sb.Append("'");
+
+			MySqlDataAdapter msda = new MySqlDataAdapter(sb.ToString(), connection);
+
+			msda.Fill(dt);
+
+			return dt.Rows.Count == 1;
+		}
+
+		/**
 		 * Método que nos diz qual o número de 
 		 * contas contidas num objeto da classe 
 		 * ContaDAO
@@ -189,11 +211,11 @@ namespace codeNotarization.DataBase
 			DataTable dt = new DataTable();
 
 			StringBuilder sb = new StringBuilder();
-			sb.Append("insert into document (hash,addrOwner) values ('");
+			sb.Append("insert into documents (hash,addrOwner,hashMetadata) values ('");
 			sb.Append(hash);
 			sb.Append("','");
 			sb.Append(document.getaddrOwner());
-			sb.Append("')");
+			sb.Append("','metadatahash')");
 
 			MySqlDataAdapter msda = new MySqlDataAdapter(sb.ToString(), connection);
 
@@ -202,6 +224,30 @@ namespace codeNotarization.DataBase
 			this.putDocumentMetadata(connection, hash, document);
 
 			connection.Close();
+		}
+
+		/**
+		 * Método que permite alterar o dono de 
+		 * um determinado documento
+		 */
+		public void changeOwner(String hash, String addrOwner, String addrNewOwner)
+		{
+			MySqlConnection connection = new MySqlConnection(this.connectionstring);
+
+			connection.Open();
+
+			DataTable dt = new DataTable();
+
+			StringBuilder sb = new StringBuilder();
+			sb.Append("update documents set addrOwner='");
+			sb.Append(addrNewOwner);
+			sb.Append("' where hash='");
+			sb.Append(hash);
+			sb.Append("'");
+
+			MySqlDataAdapter msda = new MySqlDataAdapter(sb.ToString(), connection);
+
+			msda.Fill(dt);
 		}
 	}
 }

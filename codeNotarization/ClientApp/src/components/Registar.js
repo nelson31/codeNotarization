@@ -121,12 +121,20 @@ export class Registar extends Component {
             Pais: this.state.pais,
             Cidade: this.state.cidade
         })
-            .then(conta => {
+            .then(response => {
                 //this.props.addUserToState(conta);
                 //this.props.toggle();
                 alert("Nova Conta Registada");
+                console.log(response);
+                this.setState({ dadosConta: response.data });
+                localStorage.clear();
+                localStorage.setItem("token", this.state.dadosConta.token);
+                this.props.history.push("/perfil");
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err)
+                this.props.history.push("/");
+            });
     }
 
     // Submeter um novo usuario, caso o codigo esteja bem
@@ -178,7 +186,10 @@ export class Registar extends Component {
                     <section class="pb-20 bg-gray-300">
                         <div class="flex md:flex-row-reverse flex-wrap container mx-auto px-4 pt-32 mb-auto">
                         <form class="w-full" onSubmit={this.submitNew}>
-                            <div class="flex flex-wrap -mx-3 ">
+                            <h1 className="text-black font-semibold text-5xl">
+                                  Registar
+                            </h1>
+                            <div class="flex flex-wrap -mx-3 mt-4">
                                 <div class="w-full px-3 mb-6 md:mb-0">
                                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-name">
                                             Nome
