@@ -2,6 +2,10 @@
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import decode from 'jwt-decode';
+import sha256 from 'crypto-js/sha256';
+import hmacSHA512 from 'crypto-js/hmac-sha512';
+import Base64 from 'crypto-js/enc-base64';
+
 import { NavBarIn } from './NavBarIn';
 import { RodapePerfil } from './RodapePerfil';
 import ListItem from './ListItem'
@@ -17,10 +21,17 @@ export class RegistarDoc extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: '',
-            firstName: 'Nelson',
+            firstName: '',
+            account: '',
+            nome: '',
+            email: '',
+            telemovel: '',
+            pais: '',
+            cidade: '',
+            numDocs: '',
             tasks: [],
             descricao: '',
+            file: '',
             propostasConsultas: [{
                 hash: 'xnsnjxsioxsoixs',
                 descricao: 'Exemplo de documento',
@@ -29,32 +40,61 @@ export class RegistarDoc extends Component {
         };
     }
 
-    /*
     componentDidMount() {
         const token = localStorage.getItem('token');
         var decoded = decode(token);
-        const idD = decoded.Id;
-        //console.log("Id" + idD);
-        this.state.id = idD;
-        // Buscar a lista de consultas agendadas
-        api.get(`consultas/consPropostas`, {
-            params: {
-                id: this.state.id
-            }
-        })
-            .then(res => { console.log(res); this.setState({ propostasConsultas: res.data }); })
-            .catch(error => {
-                alert("ERROR! " + error);
-                console.log(error);
-            });
-        this.setState({ firstName: localStorage.getItem("nome") });
+        this.setState({ account: decoded.Address });
+        this.setState({ nome: decoded.Nome });
+        this.setState({ email: decoded.Email });
+        this.setState({ telemovel: decoded.Telemovel });
+        this.setState({ pais: decoded.Pais });
+        this.setState({ cidade: decoded.Cidade });
+        this.setState({ numDocs: decoded.NumDocs });
+        this.setState({ firstName: decoded.Nome.split(' ', 1) });
     }
-    */
 
     // Enviar um mail e receber um codigo
     submitNew = (event) => {
         event.preventDefault();
 
+        /*
+        axios.post(`${REGISTERS_URL}/newDoc`, {
+            Address: this.state.account,
+            Token: null,
+            Name: null,
+            Email: null,
+            Telemovel: null,
+            Pais: null,
+            Cidade: null
+        })
+            .then(response => {
+                alert("Login efetuado com sucesso!!!");
+                console.log(response);
+                this.setState({ dadosConta: response.data });
+                localStorage.clear();
+                localStorage.setItem("token", this.state.dadosConta.token);
+                this.props.history.push("/perfil");
+            })
+            .catch(error => {
+                alert("O seu endereço não é válido, registe-se primeiro!!");
+                this.setState({
+                    error1:
+                        "Houve um problema com o login, verifique as suas senhas."
+                });
+                this.props.history.push("/registar");
+            })
+            */
+    }
+
+    showFile = async (e) => {
+        e.preventDefault()
+        const reader = new FileReader()
+        reader.onload = async (e) => {
+            const text = (e.target.result)
+            const hashDigest = sha256(text);
+            this.setState({ file: Base64.stringify(hashDigest) })
+        };
+        reader.readAsText(e.target.files[0])
     }
 
     addNewTask = (task, task1) => {
@@ -101,7 +141,7 @@ export class RegistarDoc extends Component {
                     <div
                         className="md:block text-left text-xl md:pb-2 text-gray-800 mr-0 inline-block whitespace-no-wrap text-sm uppercase font-bold p-3 px-0"
                     >
-                        Bem Vindo(a) <br /> {this.state.firstName.split(' ', 1)}
+                        Bem Vindo(a) <br /> {this.state.firstName}
                     </div>
 
                     {/* Navigation */}
@@ -184,7 +224,7 @@ export class RegistarDoc extends Component {
 
                                                 <form class="w-full" onSubmit={this.submitNew}>
                                                     <div class="border-dashed border-2 border-gray-400 py-12 flex flex-col justify-center items-center">
-                                                        <input id="button" type="file" class="text-2xl mt-2 rounded-sm px-6 py-2 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none" placeholder="Insira o ficheiro" required />
+                                                        <input id="button" type="file" name='file' class="text-2xl mt-2 rounded-sm px-6 py-2 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none" placeholder="Insira o ficheiro" onChange={(e) => this.showFile(e)} required />
                                                     </div>
                                                     <div class="px-3 mb-6 md:mb-0 mt-4">
                                                         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-name" name='name' type="text" onChange={this.myChangeHandler} placeholder="Descrição do ficheiro" required />

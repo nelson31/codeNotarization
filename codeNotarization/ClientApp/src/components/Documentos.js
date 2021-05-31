@@ -15,8 +15,14 @@ export class Documentos extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: '',
-            firstName: 'Nelson',
+            firstName: '',
+            account: '',
+            nome: '',
+            email: '',
+            telemovel: '',
+            pais: '',
+            cidade: '',
+            numDocs: '',
             propostasConsultas: [{
                 hash: 'xnsnjxsioxsoixs',
                 descricao: 'Exemplo de documento',
@@ -25,27 +31,18 @@ export class Documentos extends Component {
         };
     }
 
-    /*
     componentDidMount() {
         const token = localStorage.getItem('token');
         var decoded = decode(token);
-        const idD = decoded.Id;
-        //console.log("Id" + idD);
-        this.state.id = idD;
-        // Buscar a lista de consultas agendadas
-        api.get(`consultas/consPropostas`, {
-            params: {
-                id: this.state.id
-            }
-        })
-            .then(res => { console.log(res); this.setState({ propostasConsultas: res.data }); })
-            .catch(error => {
-                alert("ERROR! " + error);
-                console.log(error);
-            });
-        this.setState({ firstName: localStorage.getItem("nome") });
+        this.setState({ account: decoded.Address });
+        this.setState({ nome: decoded.Nome });
+        this.setState({ email: decoded.Email });
+        this.setState({ telemovel: decoded.Telemovel });
+        this.setState({ pais: decoded.Pais });
+        this.setState({ cidade: decoded.Cidade });
+        this.setState({ numDocs: decoded.NumDocs });
+        this.setState({ firstName: decoded.Nome.split(' ', 1) });
     }
-    */
 
     transferir = (event) => {
 
@@ -117,7 +114,7 @@ export class Documentos extends Component {
                     <div
                         className="md:block text-left text-xl md:pb-2 text-gray-800 mr-0 inline-block whitespace-no-wrap text-sm uppercase font-bold p-3 px-0"
                     >
-                        Bem Vindo(a) <br /> {this.state.firstName.split(' ', 1)}
+                        Bem Vindo(a) <br /> {this.state.firstName}
                     </div>
 
                     {/* Navigation */}

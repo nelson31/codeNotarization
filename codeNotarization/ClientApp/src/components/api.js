@@ -1,6 +1,7 @@
 ﻿import axios from 'axios';
 
 export const REGISTERS_URL = 'https://localhost:5001/registers';
+export const DOCUMENTS_URL = 'https://localhost:5001/documents';
 
 const api = axios.create({
     baseURL: `https://localhost:5001/`

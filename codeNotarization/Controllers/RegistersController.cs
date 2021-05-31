@@ -81,6 +81,7 @@ namespace codeNotarization.Controllers
                 rmodel.Telemovel = conta.Telemovel;
                 rmodel.Pais = conta.Pais;
                 rmodel.Cidade = conta.Cidade;
+                rmodel.NumDocs = "0";
                 RegisterModel reg = service.Authenticate(rmodel);
                 if (reg == null)
                 {
