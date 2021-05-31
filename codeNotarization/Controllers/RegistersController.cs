@@ -61,6 +61,35 @@ namespace codeNotarization.Controllers
             }
         }
 
+        /* POST /registers
+         * Criacao de uma nova conta
+         */
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> RegistarConta([FromBody] RegisterModel conta)
+        {
+            try
+            {
+                // Adicionar À DB
+                this.model.addRegister(conta.Address, conta.Name, conta.Email, conta.Telemovel, conta.Pais, conta.Cidade);
+                // Resposta
+                RegisterModel rmodel = new RegisterModel();
+                rmodel.Address = conta.Address;
+                rmodel.Email = conta.Email;
+                RegisterModel reg = service.Authenticate(rmodel);
+                if (reg == null)
+                {
+                    return BadRequest("Erro ao processar login!");
+                }
+                return Ok(reg);
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
         public override NoContentResult NoContent()
         {
             return base.NoContent();

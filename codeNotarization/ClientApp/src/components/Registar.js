@@ -20,14 +20,14 @@ export class Registar extends Component {
             notarizations: [],
             loading: true,
             logged: false,
-            dadosConta: []
+            dadosConta: [],
+            nome: '',
+            email: '',
+            cidade: '',
+            pais: '',
+            telemovel: ''
         };
         this.getAccount();
-    }
-
-    mySubmitHandler = (event) => {
-        event.preventDefault();
-        alert("Falta definir as acoes para os eventos");
     }
 
     getAccount = async () => {
@@ -115,7 +115,7 @@ export class Registar extends Component {
 
         axios.post(`${REGISTERS_URL}`, {
             Address: this.state.account,
-            Nome: this.state.name,
+            Name: this.state.nome,
             Email: this.state.email,
             Telemovel: this.state.telemovel,
             Pais: this.state.pais,
@@ -135,13 +135,6 @@ export class Registar extends Component {
                 console.log(err)
                 this.props.history.push("/");
             });
-    }
-
-    // Submeter um novo usuario, caso o codigo esteja bem
-    handleCheck = (event) => {
-        event.preventDefault();
-
-
     }
 
     render() {
@@ -191,10 +184,10 @@ export class Registar extends Component {
                             </h1>
                             <div class="flex flex-wrap -mx-3 mt-4">
                                 <div class="w-full px-3 mb-6 md:mb-0">
-                                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-name">
-                                            Nome
-                                        </label>
-                                    <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-name" name='name' type="text" onChange={this.myChangeHandler} placeholder="Nome completo" required />
+                                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-nome">
+                                        Nome
+                                    </label>
+                                    <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-nome" name='nome' type="text" placeholder="Nome completo" onChange={this.myChangeHandler} required />
                                 </div>
                             </div>
                             <div class="flex flex-wrap -mx-3 ">
@@ -207,7 +200,7 @@ export class Registar extends Component {
                             </div>
                             <div class="flex flex-wrap -mx-3 ">
                                 <div class="w-full px-3 mb-6 md:mb-0">
-                                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-name">
+                                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-telemovel">
                                         Telemóvel
                                         </label>
                                         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-telemovel" name='telemovel' type="tel" minlength="9" onChange={this.myChangeHandler} placeholder="9*********" required />
@@ -215,11 +208,11 @@ export class Registar extends Component {
                             </div>
                             <div class="flex flex-wrap -mx-3 ">
                                 <div class="w-full px-3 mb-6 md:mb-0">
-                                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-name">
+                                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-pais">
                                         País
                                         </label>
                                         <select class="block tracking-wide bg-gray-200 text-gray-700 border border-gray-200 py-3 px-3 mb-3 mt-2 focus:outline-none focus:bg-white focus:border-gray-500" id="grid-pais" type="text" name='pais' onChange={this.myChangeHandler} required>
-                                            <option className="block uppercase text-gray-700 text-l font-semibold mb-2" value="" disabled>Selecione uma opção</option>
+                                            <option className="block uppercase text-gray-700 text-l font-semibold mb-2" value="Portugal" autofocus>Selecione uma opção</option>
                                             <option className="block uppercase text-gray-700 text-l font-bold mb-2" value="Portugal">Portugal</option>
                                         </select>
                                 </div>
