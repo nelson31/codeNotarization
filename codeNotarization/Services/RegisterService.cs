@@ -23,7 +23,8 @@ namespace codeNotarization.Services
                     new Claim("Email", conta.Email),
                     new Claim("Telemovel", conta.Telemovel),
                     new Claim("Pais", conta.Pais),
-                    new Claim("Cidade", conta.Cidade)
+                    new Claim("Cidade", conta.Cidade),
+                    new Claim("NumDocs", conta.NumDocs)
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

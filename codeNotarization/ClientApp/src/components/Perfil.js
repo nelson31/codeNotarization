@@ -31,7 +31,8 @@ export class Perfil extends Component {
             email: '',
             telemovel: '',
             pais: '',
-            cidade: ''
+            cidade: '',
+            numDocs: ''
         };
     }
 
@@ -45,6 +46,7 @@ export class Perfil extends Component {
         this.setState({ telemovel: decoded.Telemovel });
         this.setState({ pais: decoded.Pais });
         this.setState({ cidade: decoded.Cidade });
+        this.setState({ numDocs: decoded.NumDocs });
         this.setState({ firstName: decoded.Nome.split(' ', 1) });
     }
 
@@ -182,7 +184,7 @@ export class Perfil extends Component {
                                                     <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Telemóvel:</b> {this.state.telemovel}
                                                 </p>
                                                 <p className="mb-4 text-xl text-bold leading-relaxed text-gray-800">
-                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Número de Documentos Registados:</b> {this.state.numeroDocs}
+                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Número de Documentos Registados:</b> {this.state.numDocs}
                                                 </p>
                                                 <p className="mb-4 text-xl text-bold leading-relaxed text-gray-800">
                                                     <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> País e Cidade:</b> {this.state.pais} - {this.state.cidade}

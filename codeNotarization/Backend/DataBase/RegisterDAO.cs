@@ -90,6 +90,7 @@ namespace codeNotarization.DataBase
 		public Register get(String address)
 		{
 			String name = "", email = "", telemovel = "", pais = "", cidade = "";
+			int numDocs = 0;
 			MySqlConnection connection = new MySqlConnection(this.connectionstring);
 			connection.Open();
 			DataTable dt = new DataTable();
@@ -110,6 +111,7 @@ namespace codeNotarization.DataBase
 				telemovel = dt.Rows[0].Field<String>("telemovel");
 				pais = dt.Rows[0].Field<String>("pais");
 				cidade = dt.Rows[0].Field<String>("cidade");
+				numDocs = dt.Rows[0].Field<int>("numeroDocs");
 			}
 			else
 			{
@@ -121,7 +123,7 @@ namespace codeNotarization.DataBase
 
 			List<Document> docs = documentDAO.getOwnerDocuments(address);
 
-			return new Register(address, name, email, telemovel, docs, pais, cidade);
+			return new Register(address, name, email, telemovel, docs, pais, cidade, numDocs);
 		}
 
 		/**

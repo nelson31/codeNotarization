@@ -14,5 +14,6 @@ namespace codeNotarization.Models
         public string Telemovel { get; set; }
         public string Pais { get; set; }
         public string Cidade { get; set; }
+        public string NumDocs { get; set; }
     }
 }

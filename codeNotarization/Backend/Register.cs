@@ -29,7 +29,11 @@ namespace codeNotarization.Backend
          * do novo register
          */
         private String telemovel;
-
+        /**
+         * Variável que guarda o numero de documentos 
+         * presentes no documentos
+         */
+        private int numDocs;
         /**
          * Variável que guarda o numero de documentos 
          * do novo register
@@ -48,7 +52,7 @@ namespace codeNotarization.Backend
          */
         private String cidade;
 
-        public Register(String address, String name, String email, String telemovel, List<Document> documentos, String pais, String cidade)
+        public Register(String address, String name, String email, String telemovel, List<Document> documentos, String pais, String cidade, int numDocs)
         {
             this.address = address;
             this.name = name;
@@ -57,6 +61,7 @@ namespace codeNotarization.Backend
             this.documentos = documentos;
             this.pais = pais;
             this.cidade = cidade;
+            this.numDocs = numDocs;
         }
 
         public String getAddress()
@@ -72,6 +77,10 @@ namespace codeNotarization.Backend
         public String getEmail()
         {
             return this.email;
+        }
+        public int getNumDocs()
+        {
+            return this.numDocs;
         }
 
         public String getTelemovel()

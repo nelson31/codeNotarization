@@ -48,6 +48,7 @@ namespace codeNotarization.Controllers
                 rmodel.Pais = r.getPais();
                 rmodel.Cidade = r.getCidade();
                 rmodel.Telemovel = r.getTelemovel();
+                rmodel.NumDocs = r.getNumDocs().ToString();
                 RegisterModel reg = service.Authenticate(rmodel);
                 if (reg == null)
                 {

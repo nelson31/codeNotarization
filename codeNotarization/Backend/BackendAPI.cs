@@ -51,7 +51,7 @@ namespace codeNotarization.Backend
          */
         public void addRegister(String address, String name, String email, String telemovel, String pais, String cidade)
         {
-            Register r = new Register(address, name, email, telemovel, new List<Document>(), pais, cidade);
+            Register r = new Register(address, name, email, telemovel, new List<Document>(), pais, cidade, 0);
             if (rDAO.contains(address))
                 throw new RegisterExistsException("Já existe um register com este endereço atribuido...");
             rDAO.put(address, r);
