@@ -71,7 +71,7 @@ export class Privacy extends Component {
                 Cidade: null
             })
                 .then(response => {
-                    alert("Successfully logged in!!!");
+                    alert("Login efetuado com sucesso!!!");
                     console.log(response);
                     this.setState({ dadosConta: response.data });
                     localStorage.clear();
@@ -79,12 +79,12 @@ export class Privacy extends Component {
                     this.props.history.push("/perfil");
                 })
                 .catch(error => {
-                    alert("Your address isn't valid!!!");
+                    alert("O seu endereço não é válido, registe-se primeiro!!");
                     this.setState({
                         error1:
                             "Houve um problema com o login, verifique as suas senhas."
                     });
-                    console.log(error);
+                    this.props.history.push("/registar");
                 })
         }
     }

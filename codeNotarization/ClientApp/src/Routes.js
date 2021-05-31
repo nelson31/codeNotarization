@@ -9,6 +9,7 @@ import { Perfil } from "./components/Perfil";
 import { Documentos } from "./components/Documentos";
 import { RegistarDoc } from "./components/RegistarDoc";
 import { Logout } from "./components/Logout";
+import { Registar } from "./components/Registar";
 
 
 const isAuthenticated = () => {
@@ -59,6 +60,7 @@ const Routes = () => (
             <AuthRoute exact path='/' component={Home} />
             <AuthRoute exact path='/privacy' component={Privacy} />
             <AuthRoute exact path='/info' component={InfoDocument} />
+            <AuthRoute exact path='/registar' component={Registar} />
             <PrivateRoute exact path='/perfil' component={Perfil} />
             <PrivateRoute exact path='/documentos' component={Documentos} />
             <PrivateRoute exact path='/registarDoc' component={RegistarDoc} />

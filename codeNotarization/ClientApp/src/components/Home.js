@@ -20,7 +20,7 @@ export class Home extends Component {
     }
 
     async loadBlockchainData() {
-        const web3 = new Web3(Web3.givenProvider || "http://localhost:8545")
+        const web3 = new Web3("http://localhost:8545")
         const accounts = await web3.eth.getAccounts()
         this.setState({ account: accounts[0] })
         const blocknotarization = new web3.eth.Contract(BLOCK_NOTARIZATION_ABI, BLOCK_NOTARIZATION_ADDRESS)
@@ -100,7 +100,7 @@ export class Home extends Component {
                 Cidade: null
             })
                 .then(response => {
-                    alert("Successfully logged in!!!");
+                    alert("Login efetuado com sucesso!!!");
                     console.log(response);
                     this.setState({ dadosConta: response.data });
                     localStorage.clear();
@@ -108,12 +108,12 @@ export class Home extends Component {
                     this.props.history.push("/perfil");
                 })
                 .catch(error => {
-                    alert("Your address isn't valid!!!");
+                    alert("O seu endereço não é válido, registe-se primeiro!!");
                     this.setState({
                         error1:
                             "Houve um problema com o login, verifique as suas senhas."
                     });
-                    console.log(error);
+                    this.props.history.push("/registar");
                 })
         }
     }
