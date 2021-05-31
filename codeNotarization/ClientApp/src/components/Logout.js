@@ -9,19 +9,9 @@ export class Logout extends Component {
         super(props);
     }
 
-    /*
     componentDidMount() {
         localStorage.removeItem("token");
-        localStorage.removeItem("notify");
-        if (localStorage.getItem("nome") != null) {
-            localStorage.removeItem("nome");
-        }
-        const inter = localStorage.getItem('intervalo');
-        localStorage.removeItem("intervalo");
-        console.log("Intervalo = " + inter);
-        clearInterval(inter);
     }
-    */
 
     handleSubmit = () => {
 

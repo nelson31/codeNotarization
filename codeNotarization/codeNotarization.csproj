@@ -27,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Backend\Exceptions\" />
     <Folder Include="ClientApp\src\components\images\" />
   </ItemGroup>
 

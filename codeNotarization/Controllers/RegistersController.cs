@@ -20,7 +20,7 @@ namespace codeNotarization.Controllers
     public class RegistersController : ControllerBase
     {
         private BackendAPI model = new BackendAPI();
-        private ContaService service = new ContaService();
+        private RegisterService service = new RegisterService();
 
         private readonly ILogger<RegistersController> _logger;
 
@@ -29,6 +29,37 @@ namespace codeNotarization.Controllers
             _logger = logger;
         }
 
+
+        /* /registers/login
+         * Login
+         */
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public IActionResult Login([FromBody] RegisterModel register)
+        {
+            Register r = null;
+            try
+            {
+                r = this.model.Login(register.Address);
+                RegisterModel rmodel = new RegisterModel();
+                rmodel.Address = r.getAddress();
+                rmodel.Email = r.getEmail();
+                rmodel.Name = r.getName();
+                rmodel.Pais = r.getPais();
+                rmodel.Cidade = r.getCidade();
+                rmodel.Telemovel = r.getTelemovel();
+                RegisterModel reg = service.Authenticate(rmodel);
+                if (reg == null)
+                {
+                    return BadRequest("Erro ao processar login!");
+                }
+                return Ok(reg);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         public override NoContentResult NoContent()
         {

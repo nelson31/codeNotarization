@@ -8,9 +8,9 @@ using codeNotarization.Models;
 
 namespace codeNotarization.Services
 {
-    public class ContaService
+    public class RegisterService
     {
-        public ContaModel Authenticate(ContaModel conta, string email, string type)
+        public RegisterModel Authenticate(RegisterModel conta)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
@@ -18,17 +18,15 @@ namespace codeNotarization.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, email),
-                    new Claim("Store", type),
-                    new Claim("Id", conta.Id)
+                    new Claim(ClaimTypes.Name, conta.Address),
+                    new Claim("Email", conta.Email),
+                    new Claim("Address", conta.Address)
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             conta.Token = tokenHandler.WriteToken(token);
-
-            conta.Password = null;
 
             return conta;
         }

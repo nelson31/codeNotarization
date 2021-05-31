@@ -1,27 +1,34 @@
 ﻿import React, { Component } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Web3 from 'web3'
+import { Link } from 'react-router-dom';
 
 import { NavBarOut } from './NavBarOut';
-import { CONTAS_URL } from './api';
+import { REGISTERS_URL } from './api';
+import logo from './images/logo_blocknotarization.png';
 import { Rodape } from './Rodape';
-
-const InitialState = {
-    hash: 'sfvdgbffsfdfggfddfgff234e',
-    timestamp: '2021-05-30 11:19:20 [UTC]',
-    descricao: 'Artigo de opinião sobre BlockChain',
-    dono: 'Universidade do Minho',
-    metadados: [],
-    numPagina: 0,
-    tamanhoPag: 9
-};
 
 export class InfoDocument extends Component {
     static displayName = InfoDocument.name;
 
     constructor(props) {
         super(props);
-        this.state = InitialState;
+        this.state = {
+            account: '',
+            notarizationsCount: 0,
+            notarizations: [],
+            loading: true,
+            logged: false,
+            dadosConta: [],
+            hash: 'sfvdgbffsfdfggfddfgff234e',
+            timestamp: '2021-05-30 11:19:20 [UTC]',
+            descricao: 'Artigo de opinião sobre BlockChain',
+            dono: 'Universidade do Minho',
+            metadados: [],
+            numPagina: 0,
+            tamanhoPag: 9
+        };
     }
 
     mySubmitHandler = (event) => {
@@ -35,54 +42,74 @@ export class InfoDocument extends Component {
         this.setState({ [nam]: val });
     }
 
-    // Enviar um mail e receber um codigo
-    submitNew = (event) => {
-        event.preventDefault();
+    // LOGIN com o Metamask
+    login = async (event) => {
 
-        axios.get(`${CONTAS_URL}/email`, {
-            params: {
-                Email: this.state.email
+        event.preventDefault();
+        /* ABRIR O METAMASK */
+        // Modern DApp Browsers
+        if (window.ethereum) {
+            window.web3 = new Web3(window.ethereum);
+            try {
+                // Request account access if needed
+                await window.ethereum.enable();
+                this.setState({ logged: true });
+                const accounts = await window.web3.eth.getAccounts()
+                this.setState({ account: accounts[0] })
+                // Acccounts now exposed
+                //web3.eth.sendTransaction({/* ... */ });
+            } catch (error) {
+                // User denied account access...
+                alert(error);
+                this.setState({ logged: false });
             }
-        })
-            .then(conta => {
-                this.setState({ codR: conta.data });
-                (this.state.isRegistarOn) ? this.setState({ isRegistarOn: false }) : this.setState({ isRegistarOn: true });
+        }
+        // Legacy DApp Browsers
+        else if (window.web3) {
+            window.web3 = new Web3(window.web3.currentProvider);
+            this.setState({ logged: true });
+        }
+        // Non-DApp Browsers
+        else {
+            alert('Você tem de instalar o Metamask primeiro!!');
+            this.setState({ logged: false });
+        }
+
+        // Comunicar ao backend
+        if (this.state.logged == true) {
+            axios.post(`${REGISTERS_URL}/login`, {
+                Address: this.state.account,
+                Token: null,
+                Name: null,
+                Email: null,
+                Telemovel: null,
+                Pais: null,
+                Cidade: null
             })
-            .catch(err => {
-                console.log(err)
-                alert("Email já existente!")
-            });
+                .then(response => {
+                    alert("Successfully logged in!!!");
+                    console.log(response);
+                    this.setState({ dadosConta: response.data });
+                    localStorage.clear();
+                    localStorage.setItem("token", this.state.dadosConta.token);
+                    this.props.history.push("/perfil");
+                })
+                .catch(error => {
+                    alert("Your address isn't valid!!!");
+                    this.setState({
+                        error1:
+                            "Houve um problema com o login, verifique as suas senhas."
+                    });
+                    console.log(error);
+                })
+        }
     }
 
     // Submeter um novo usuario, caso o codigo esteja bem
     handleCheck = (event) => {
         event.preventDefault();
 
-        let codReg = this.state.codR;
-        let codIns = this.state.codI;
-
-        if ((parseInt(codReg.toString()) - parseInt(codIns.toString())) == 0) {
-            axios.post(`${CONTAS_URL}`, {
-                type: this.state.type,
-                Nome: this.state.name,
-                Email: this.state.email,
-                Password: this.state.password,
-                DataNascimento: this.state.dataNascimento,
-                Morada: this.state.morada,
-                Nif: this.state.nif,
-                Codigo_postal: this.state.codigo_postal,
-                Contactos: this.state.contactos,
-                Localidade: this.state.localidade
-            })
-                .then(conta => {
-                    //this.props.addUserToState(conta);
-                    //this.props.toggle();
-                    alert("Nova Conta Registada");
-                })
-                .catch(err => console.log(err));
-        } else { alert("Código Inserido Inválido"); }
-        this.setState(InitialState);
-        (this.state.isRegistarOn) ? this.setState({ isRegistarOn: false }) : this.setState({ isRegistarOn: true });
+        
     }
 
     nextPage = () => {
@@ -102,7 +129,41 @@ export class InfoDocument extends Component {
     render() {
         return (
             <>
-                <NavBarOut />
+                <nav
+                    className="top-0 absolute z-50 w-full items-center justify-between px-2 py-3 navbar-expand-sm"
+                >
+                    <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
+                        <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
+                            <Link tag={Link} className="links" to="/">
+                                <a
+                                    className="text-white text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-no-wrap uppercase"
+                                >
+                                    <img className="text-gray-800 active:bg-gray-100 text-xs font-bold uppercase px-2 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3"
+                                        width={200} src={logo} />
+                                </a>
+                            </Link>
+                        </div>
+                        <div
+                            className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start"
+                            id="example-navbar-warning"
+                        >
+
+                            <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
+                                <li className="flex items-center">
+                                    <form onSubmit={this.login}>
+                                        <button
+                                            className="bg-white text-gray-800 active:bg-gray-100 text-s font-bold uppercase px-8 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-8"
+                                            type="submit"
+                                            style={{ transition: "all .15s ease" }}
+                                        >
+                                            <i className="fas fa-arrow-alt-circle-down"></i> Login
+                                            </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
                 <main>
                     <section class="pb-20 bg-gray-300">
                         <div class="flex flex-wrap container px-4 pt-32 pb-1">

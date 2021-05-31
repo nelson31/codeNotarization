@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using codeNotarization.Backend;
+using codeNotarization.Exceptions;
 
 namespace codeNotarization.DataBase
 {
@@ -87,6 +88,10 @@ namespace codeNotarization.DataBase
 				telemovel = dt.Rows[0].Field<String>("telemovel");
 				pais = dt.Rows[0].Field<String>("pais");
 				cidade = dt.Rows[0].Field<String>("cidade");
+			} else
+			{
+				connection.Close();
+				throw new UserNotRegistedException("[Error] address '" + address + "' não existe na BD");
 			}
 
 			connection.Close();

@@ -1,9 +1,12 @@
 ﻿import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Web3 from 'web3'
+import axios from 'axios';
 import { BLOCK_NOTARIZATION_ABI, BLOCK_NOTARIZATION_ADDRESS } from './configWeb3.js'
+import { REGISTERS_URL } from './api';
 
 import LogoS from './images/logo.png';
+import logo from './images/logo_blocknotarization.png';
 import { Rodape } from './Rodape.js';
 import { NavBarOut } from './NavBarOut.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -20,12 +23,12 @@ export class Home extends Component {
         const web3 = new Web3(Web3.givenProvider || "http://localhost:8545")
         const accounts = await web3.eth.getAccounts()
         this.setState({ account: accounts[0] })
-        const todoList = new web3.eth.Contract(BLOCK_NOTARIZATION_ABI, BLOCK_NOTARIZATION_ADDRESS)
-        this.setState({ todoList })
-        const notarizationsCount = await todoList.methods.notarizationsCount().call()
+        const blocknotarization = new web3.eth.Contract(BLOCK_NOTARIZATION_ABI, BLOCK_NOTARIZATION_ADDRESS)
+        this.setState({ blocknotarization })
+        const notarizationsCount = await blocknotarization.methods.notarizationsCount().call()
         this.setState({ notarizationsCount })
         for (var i = 1; i <= notarizationsCount; i++) {
-            const task = await todoList.methods.notarizations(i).call()
+            const task = await blocknotarization.methods.notarizations(i).call()
             this.setState({
                 notarizations: [...this.state.notarizations, task]
             })
@@ -39,37 +42,73 @@ export class Home extends Component {
             account: '',
             notarizationsCount: 0,
             notarizations: [],
-            loading: true
+            loading: true,
+            logged: false,
+            dadosConta: []
         };
     }
 
     mySubmitHandler = (event) => {
         event.preventDefault();
-        /*
-        if (!this.state.senha) {
-            this.setState({ error1: "Preencha as senhas para continuar!" });
-        } else {
-            axios.post(`${ADMIN_URL}/login`, {
-                Senha: this.state.senha
+
+
+        this.props.history.push("/info");
+    }
+
+    // LOGIN com o Metamask
+    login = async (event) => {
+
+        event.preventDefault();
+        /* ABRIR O METAMASK */
+        // Modern DApp Browsers
+        if (window.ethereum) {
+            window.web3 = new Web3(window.ethereum);
+            try {
+                // Request account access if needed
+                await window.ethereum.enable();
+                this.setState({ logged: true });
+                const accounts = await window.web3.eth.getAccounts()
+                this.setState({ account: accounts[0] })
+                // Acccounts now exposed
+                //web3.eth.sendTransaction({/* ... */ });
+            } catch (error) {
+                // User denied account access...
+                alert(error);
+                this.setState({ logged: false });
+            }
+        }
+        // Legacy DApp Browsers
+        else if (window.web3) {
+            window.web3 = new Web3(window.web3.currentProvider);
+            this.setState({ logged: true });
+        }
+        // Non-DApp Browsers
+        else {
+            alert('Você tem de instalar o Metamask primeiro!!');
+            this.setState({ logged: false });
+        }
+
+        // Comunicar ao backend
+        if (this.state.logged == true) {
+            axios.post(`${REGISTERS_URL}/login`, {
+                Address: this.state.account,
+                Token: null,
+                Name: null,
+                Email: null,
+                Telemovel: null,
+                Pais: null,
+                Cidade: null
             })
                 .then(response => {
                     alert("Successfully logged in!!!");
                     console.log(response);
-                    this.state.valido = true;
-                    this.setState({ dadosContaAdmin: response.data });
+                    this.setState({ dadosConta: response.data });
                     localStorage.clear();
-                    localStorage.setItem("token", this.state.dadosContaAdmin.token);
-                    if (this.state.dadosContaAdmin.type[0] == 'A') {
-                        this.state.type = "Admin";
-                        this.props.history.push("/perfilAdmin");
-                    } else {
-                        this.setState({
-                            error1:
-                                "Houve um problema com o login, verifique as suas senhas."
-                        });
-                    }
+                    localStorage.setItem("token", this.state.dadosConta.token);
+                    this.props.history.push("/perfil");
                 })
                 .catch(error => {
+                    alert("Your address isn't valid!!!");
                     this.setState({
                         error1:
                             "Houve um problema com o login, verifique as suas senhas."
@@ -77,8 +116,6 @@ export class Home extends Component {
                     console.log(error);
                 })
         }
-        */
-        this.props.history.push("/info");
     }
 
     myChangeHandler = (event) => {
@@ -99,7 +136,41 @@ export class Home extends Component {
     render() {
         return (
             <>
-                <NavBarOut />
+                <nav
+                    className="top-0 absolute z-50 w-full items-center justify-between px-2 py-3 navbar-expand-sm"
+                >
+                    <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
+                        <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
+                            <Link tag={Link} className="links" to="/">
+                                <a
+                                    className="text-white text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-no-wrap uppercase"
+                                >
+                                    <img className="text-gray-800 active:bg-gray-100 text-xs font-bold uppercase px-2 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3"
+                                        width={200} src={logo} />
+                                </a>
+                            </Link>
+                        </div>
+                        <div
+                            className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start"
+                            id="example-navbar-warning"
+                        >
+
+                            <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
+                                <li className="flex items-center">
+                                    <form onSubmit={this.login}>
+                                        <button
+                                            className="bg-white text-gray-800 active:bg-gray-100 text-s font-bold uppercase px-8 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-8"
+                                            type="submit"
+                                            style={{ transition: "all .15s ease" }}
+                                        >
+                                            <i className="fas fa-arrow-alt-circle-down"></i> Login
+                                            </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
                 <main>
                     <div className="relative pt-16 pb-32 flex content-center items-center justify-center"
                         style={{
@@ -123,9 +194,6 @@ export class Home extends Component {
                                         />
                                         <h1 className="text-white font-semibold text-5xl">
                                             BlockNotarization
-                                        </h1>
-                                        <h1 className="text-white font-semibold text-3xl">
-                                            {this.state.account}
                                         </h1>
                                         <p className="mt-4 text-lg text-gray-300">
                                             Seja bem vindo à nossa plataforma de notarização de documentos usando a tecnologia BlockChain!

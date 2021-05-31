@@ -9,18 +9,7 @@ import { Perfil } from "./components/Perfil";
 import { Documentos } from "./components/Documentos";
 import { RegistarDoc } from "./components/RegistarDoc";
 import { Logout } from "./components/Logout";
-import { Login } from "./components/Login";
 
-
-//const PrivateRoute = ({ component: Component, ...rest }) => (
-//    <Route {...rest} render={props => (
-//        isAuthenticated() ? (
-//            <Component {...props} />
-//        ) : (
-//                <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-//            )
-//    )} />
-//);
 
 const isAuthenticated = () => {
     const token = localStorage.getItem('token');
@@ -48,49 +37,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
         isAuthenticated() ? (
             <Component {...props} />
         ) : (
-                <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-            )
-    )} />
-);
-
-const PrivateRouteP = ({ component: Component, ...rest }) => (
-    <Route {...rest} render={props => (
-        isAuthenticated() ? (
-            (decode(localStorage.getItem('token')).Store[0] == 'P') ?
-                <Component {...props} />
-                : (decode(localStorage.getItem('token')).Store[0] == 'M') ?
-                    <Redirect to={{ pathname: '/perfilMedico', state: { from: props.location } }} />
-                    : < Redirect to={{ pathname: '/perfilAdmin', state: { from: props.location } }} />
-        ) : (
-                <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-            )
-    )} />
-);
-
-const PrivateRouteA = ({ component: Component, ...rest }) => (
-    <Route {...rest} render={props => (
-        isAuthenticated() ? (
-            (decode(localStorage.getItem('token')).Store[0] == 'A') ?
-                <Component {...props} />
-                : (decode(localStorage.getItem('token')).Store[0] == 'M') ?
-                    <Redirect to={{ pathname: '/perfilMedico', state: { from: props.location } }} />
-                    : < Redirect to={{ pathname: '/perfilPaciente', state: { from: props.location } }} />
-        ) : (
-                <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-            )
-    )} />
-);
-
-const PrivateRouteM = ({ component: Component, ...rest }) => (
-    <Route {...rest} render={props => (
-        isAuthenticated() ? (
-            (decode(localStorage.getItem('token')).Store[0] == 'M') ?
-                <Component {...props} />
-                : (decode(localStorage.getItem('token')).Store[0] == 'P') ?
-                    <Redirect to={{ pathname: '/perfilPaciente', state: { from: props.location } }} />
-                    : < Redirect to={{ pathname: '/perfilAdmin', state: { from: props.location } }} />
-        ) : (
-                <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+                <Redirect to={{ pathname: '/', state: { from: props.location } }} />
             )
     )} />
 );
@@ -101,11 +48,7 @@ const AuthRoute = ({ component: Component, ...rest }) => (
         !isAuthenticated() ? (
             <Component {...props} />
         ) : (
-                (decode(localStorage.getItem('token')).Store[0] == 'P') ?
-                    <Redirect to={{ pathname: '/perfilPaciente', state: { from: props.location } }} />
-                    : (decode(localStorage.getItem('token')).Store[0] == 'M') ?
-                        <Redirect to={{ pathname: '/perfilMedico', state: { from: props.location } }} />
-                        : < Redirect to={{ pathname: '/perfilAdmin', state: { from: props.location } }} />
+                <Redirect to={{ pathname: '/perfil', state: { from: props.location } }} />
             )
     )} />
 );
@@ -116,11 +59,10 @@ const Routes = () => (
             <AuthRoute exact path='/' component={Home} />
             <AuthRoute exact path='/privacy' component={Privacy} />
             <AuthRoute exact path='/info' component={InfoDocument} />
-            <AuthRoute exact path='/perfil' component={Perfil} />
-            <AuthRoute exact path='/documentos' component={Documentos} />
-            <AuthRoute exact path='/registarDoc' component={RegistarDoc} />
-            <AuthRoute exact path='/login' component={Login} />
-            <AuthRoute exact path='/logout' component={Logout} />
+            <PrivateRoute exact path='/perfil' component={Perfil} />
+            <PrivateRoute exact path='/documentos' component={Documentos} />
+            <PrivateRoute exact path='/registarDoc' component={RegistarDoc} />
+            <PrivateRoute exact path='/logout' component={Logout} />
         </Switch>
     </BrowserRouter>
 );

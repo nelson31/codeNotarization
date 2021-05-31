@@ -1,8 +1,6 @@
 ﻿import axios from 'axios';
 
-export const CONTAS_URL = 'https://localhost:5001/contas';
-export const CONSULTAS_URL = 'https://localhost:5001/consultas';
-export const ADMIN_URL = 'https://localhost:5001/admin';
+export const REGISTERS_URL = 'https://localhost:5001/registers';
 
 const api = axios.create({
     baseURL: `https://localhost:5001/`

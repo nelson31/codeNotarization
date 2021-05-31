@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using codeNotarization.DataBase;
+using codeNotarization.Exceptions;
 
 namespace codeNotarization.Backend
 {
@@ -33,17 +34,15 @@ namespace codeNotarization.Backend
 		 */
 		public Register Login(string address)
 		{
-			Register r = this.registers.get(address);
-
-			/*if (!r.getEmail().Equals(email))
-				throw new MailNaoRegistado("[Error] email '" + email + "' não corresponde ao seu id");
-
-			if (!PasswordHasher.VerificaHash(password, c.getPassword()))
+			Register r = null;
+			try
 			{
-				Console.WriteLine("erro na pw;");
-				throw new PasswordErrada("[Error] password errada");
+				r = this.registers.get(address);
+
+			} catch(UserNotRegistedException e)
+			{
+				throw new UserNotRegistedException(e.Message);
 			}
-			*/
 
 			return r;
 		}
