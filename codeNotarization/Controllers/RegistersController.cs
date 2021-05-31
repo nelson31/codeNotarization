@@ -75,7 +75,11 @@ namespace codeNotarization.Controllers
                 // Resposta
                 RegisterModel rmodel = new RegisterModel();
                 rmodel.Address = conta.Address;
+                rmodel.Name = conta.Name;
                 rmodel.Email = conta.Email;
+                rmodel.Telemovel = conta.Telemovel;
+                rmodel.Pais = conta.Pais;
+                rmodel.Cidade = conta.Cidade;
                 RegisterModel reg = service.Authenticate(rmodel);
                 if (reg == null)
                 {

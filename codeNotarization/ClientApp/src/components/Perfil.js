@@ -21,110 +21,32 @@ export class Perfil extends Component {
             loggedIn = false
         }
         this.state = {
-            id: '',
             loggedIn,
-            firstName: 'Nelson',
+            firstName: '',
             notificacoes: [],
             dadosPerfil: [],
             consultasAgendadas: [],
-            name: null,
-            dataNascimento: null,
-            morada: null,
-            codigo_postal: null,
-            passwordAntiga: null,
-            passwordNova: null,
-            nif: null,
-            contactos: null,
-            localidade: null
+            account: '',
+            nome: '',
+            email: '',
+            telemovel: '',
+            pais: '',
+            cidade: ''
         };
     }
 
-    /*
+    
     componentDidMount() {
         const token = localStorage.getItem('token');
         var decoded = decode(token);
-        const idD = decoded.Id;
-        //console.log("Id" + idD);
-        this.state.id = idD;
-        if (localStorage.getItem("nome") != null) {
-            this.setState({ firstName: localStorage.getItem("nome") });
-        }
-        if (localStorage.getItem('intervalo') == null) {
-            var notifications = localStorage.getItem('notify')
-            if (notifications == null) {
-                notifications = []
-            }
-            api.get(`consultas/notify`, {
-                params: {
-                    id: this.state.id
-                }
-            })
-                .then(res => {
-                    if (!notifications.includes(res.data)) {
-                        notifications.push(res.data)
-                        localStorage.setItem('notify', notifications)
-                        alert("[NOVA NOTIFICAÇÃO]\n" + res.data);
-                    }
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-            const idIntervalo = setInterval(() => {
-                var notifications = localStorage.getItem('notify')
-                if (notifications == null) {
-                    notifications = []
-                }
-                const token = localStorage.getItem('token');
-                var decoded = decode(token);
-                const idD = decoded.Id;
-                api.get(`consultas/notify`, {
-                    params: {
-                        id: idD
-                    }
-                })
-                    .then(res => {
-                        if (!notifications.includes(res.data)) {
-                            notifications.push(res.data)
-                            localStorage.setItem('notify', notifications)
-                            alert("[NOVA NOTIFICAÇÃO]\n" + res.data);
-                        }
-                    })
-                    .catch(error => {
-                        //alert(error.data);
-                        console.log(error);
-                    });
-            }, 60000);
-            localStorage.setItem('intervalo', idIntervalo);
-        }
-        // Buscar os dados do cliente
-        api.get(`contas/${this.state.id}`)
-            .then(res => {
-                console.log(res);
-                this.setState({ dadosPerfil: res.data });
-                if (localStorage.getItem("nome") == null) {
-                    this.setState({ firstName: res.data.nome });
-                    localStorage.setItem("nome", this.state.firstName);
-                }
-            })
-            .catch(error => {
-                alert("ERROR! " + error);
-                console.log(error);
-            });
-        // Buscar a lista de consultas agendadas
-        api.get(`consultas/listaAg`, {
-            params: {
-                id: this.state.id
-            }
-        })
-            .then(res => {
-                console.log(res);
-                this.setState({ consultasAgendadas: res.data });
-            })
-            .catch(error => {
-                alert("ERROR! " + error);
-                console.log(error);
-            });
-    } */
+        this.setState({ account: decoded.Address });
+        this.setState({ nome: decoded.Nome });
+        this.setState({ email: decoded.Email });
+        this.setState({ telemovel: decoded.Telemovel });
+        this.setState({ pais: decoded.Pais });
+        this.setState({ cidade: decoded.Cidade });
+        this.setState({ firstName: decoded.Nome.split(' ', 1) });
+    }
 
     myChangeHandler = (event) => {
         let nam = event.target.name;
@@ -152,7 +74,7 @@ export class Perfil extends Component {
                     <div
                         className="md:block text-left text-xl md:pb-2 text-gray-800 mr-0 inline-block whitespace-no-wrap text-sm uppercase font-bold p-3 px-0"
                     >
-                        Bem Vindo(a) <br /> {this.state.firstName.split(' ', 1)}
+                        Bem Vindo(a) <br /> {this.state.firstName}
                     </div>
 
                     {/* Navigation */}
@@ -248,22 +170,22 @@ export class Perfil extends Component {
                                         <div className="flex flex-wrap justify-center">
                                             <div className="w-full lg:w-9/12 px-4">
                                                 <p className="mb-4 text-xl text-bold leading-relaxed text-gray-800">
-                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Nome:</b> {this.state.dadosPerfil.nome}
+                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Nome:</b> {this.state.nome}
                                                 </p>
                                                 <p className="mb-4 text-xl text-bold leading-relaxed text-gray-800">
-                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Endereço da Conta:</b> {this.state.dadosPerfil.address}
+                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Endereço da Conta:</b> {this.state.account}
                                                 </p>
                                                 <p className="mb-4 text-xl text-bold leading-relaxed text-gray-800">
-                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Email:</b> {this.state.dadosPerfil.email}
+                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Email:</b> {this.state.email}
                                                 </p>
                                                 <p className="mb-4 text-xl text-bold leading-relaxed text-gray-800">
-                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Telemóvel:</b> {this.state.dadosPerfil.telemovel}
+                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Telemóvel:</b> {this.state.telemovel}
                                                 </p>
                                                 <p className="mb-4 text-xl text-bold leading-relaxed text-gray-800">
-                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Número de Documentos Registados:</b> {this.state.dadosPerfil.numeroDocs}
+                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Número de Documentos Registados:</b> {this.state.numeroDocs}
                                                 </p>
                                                 <p className="mb-4 text-xl text-bold leading-relaxed text-gray-800">
-                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> País e Cidade:</b> {this.state.dadosPerfil.pais} - {this.state.dadosPerfil.cidade}
+                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> País e Cidade:</b> {this.state.pais} - {this.state.cidade}
                                                 </p>
                                             </div>
                                         </div>
