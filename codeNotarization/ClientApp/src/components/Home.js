@@ -2,9 +2,9 @@
 import { Link } from 'react-router-dom';
 import Web3 from 'web3'
 import axios from 'axios';
-import { BLOCK_NOTARIZATION_ABI, BLOCK_NOTARIZATION_ADDRESS } from './configWeb3.js'
 import { REGISTERS_URL } from './api';
 
+import Registry from '../abis/Registry.json'
 import LogoS from './images/logo.png';
 import logo from './images/logo_blocknotarization.png';
 import { Rodape } from './Rodape.js';
@@ -23,11 +23,10 @@ export class Home extends Component {
         const web3 = new Web3("http://localhost:8545")
         const accounts = await web3.eth.getAccounts()
         this.setState({ account: accounts[0] })
-        const blocknotarization = new web3.eth.Contract(BLOCK_NOTARIZATION_ABI, BLOCK_NOTARIZATION_ADDRESS)
-        this.setState({ blocknotarization })
-        const notarizationsCount = await blocknotarization.methods.notarizationsCount().call()
-        this.setState({ notarizationsCount })
-        for (var i = 1; i <= notarizationsCount; i++) {
+        const blocknotarization = new web3.eth.Contract(Registry.abi, accounts[0])
+        const count = await blocknotarization.options.notarizationsCount
+        this.setState({ notarizationsCount: count })
+        for (var i = 1; i <= count; i++) {
             const task = await blocknotarization.methods.notarizations(i).call()
             this.setState({
                 notarizations: [...this.state.notarizations, task]
@@ -44,15 +43,24 @@ export class Home extends Component {
             notarizations: [],
             loading: true,
             logged: false,
-            dadosConta: []
+            dadosConta: [],
+            hashDoc: ''
         };
     }
 
-    mySubmitHandler = (event) => {
+    mySubmitHandler = async (event) => {
         event.preventDefault();
 
+        const web3 = new Web3("http://localhost:8545")
+        const blocknotarization = new web3.eth.Contract(Registry.abi, Registry.networks[5777].address)
+        const notar = await blocknotarization.methods.isNotarized(this.state.hashDoc).call()
 
-        this.props.history.push("/info");
+        if (notar == true) {
+            localStorage.setItem("hash", this.state.hashDoc);
+            this.props.history.push("/info");
+        } else {
+            alert("Hash Inserido não corresponde a um documento notarizado!")
+        }
     }
 
     // LOGIN com o Metamask
@@ -290,7 +298,7 @@ export class Home extends Component {
                                 <form onSubmit={this.mySubmitHandler}>
                                     <div class="flex flex-wrap -mx-3 my-3 ">
                                         <div class="w-full px-3 mb-6 md:mb-0">
-                                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-name" name='name' type="text" placeholder="Insira aqui o Hash do documento a procurar..." onChange={this.myChangeHandler} required />
+                                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-hashDoc" name='hashDoc' type="text" placeholder="Insira aqui o Hash do documento a procurar..." onChange={this.myChangeHandler} required />
                                         </div>
                                         <div className="text-center mt-6">
                                             <button

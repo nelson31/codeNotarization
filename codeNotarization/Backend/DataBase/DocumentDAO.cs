@@ -121,7 +121,7 @@ namespace codeNotarization.DataBase
 			DataTable dt = new DataTable();
 
 			StringBuilder sb = new StringBuilder();
-			sb.Append("select * from document where hash='");
+			sb.Append("select * from documents where hash='");
 			sb.Append(hash);
 			sb.Append("'");
 

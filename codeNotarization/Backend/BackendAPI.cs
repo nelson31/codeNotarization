@@ -87,5 +87,22 @@ namespace codeNotarization.Backend
             rDAO.decreaseNumDocs(addrOwner);
             dDAO.changeOwner(hashDocument, addrOwner, addrNewOwner);
         }
+
+        /*
+         * Método que obtem o documento dado o seu hash
+         */
+         public Document getDocument(String hash)
+        {
+            Document d = null;
+            if (dDAO.contains(hash))
+            {
+                d = dDAO.get(hash);
+            }
+            else
+            {
+                throw new DocumentExistsException("O Documento nao existe na DB!");
+            }
+            return d;
+        }
     }
 }

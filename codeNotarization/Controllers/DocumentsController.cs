@@ -29,6 +29,36 @@ namespace codeNotarization.Controllers
             _logger = logger;
         }
 
+        /* GET /documents/hashDoc
+         * Obter um documento dado o seu hash
+         */
+        [HttpGet("{hashDoc}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetDoc(string hashDoc)
+        {
+            try
+            {
+                Document d = model.getDocument(hashDoc);
+                DocumentModel dModel = new DocumentModel();
+                dModel.AddrOwner = d.getaddrOwner();
+                dModel.Hash = d.getHash();
+                List<MetadataModel> list = new List<MetadataModel>();
+                foreach(string key in d.getMetadados().Keys)
+                {
+                    MetadataModel m = new MetadataModel();
+                    m.Nome = key;
+                    m.Atributo = d.getMetadados()[key];
+                    list.Add(m);
+                }
+                dModel.Metadata = list;
+                return Ok(dModel);
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
 
         /* POST /documents
          * Adicao de um novo documento notarizado por parte do registador

@@ -5,7 +5,7 @@ import Web3 from 'web3'
 import { Link } from 'react-router-dom';
 
 import { NavBarOut } from './NavBarOut';
-import { REGISTERS_URL } from './api';
+import { REGISTERS_URL, DOCUMENTS_URL } from './api';
 import logo from './images/logo_blocknotarization.png';
 import { Rodape } from './Rodape';
 
@@ -20,6 +20,7 @@ export class InfoDocument extends Component {
             notarizations: [],
             loading: true,
             logged: false,
+            dadosDocumento: [],
             dadosConta: [],
             hash: 'sfvdgbffsfdfggfddfgff234e',
             timestamp: '2021-05-30 11:19:20 [UTC]',
@@ -29,6 +30,23 @@ export class InfoDocument extends Component {
             numPagina: 0,
             tamanhoPag: 9
         };
+    }
+
+    componentDidMount() {
+
+        const hashDoc = localStorage.getItem('hash');
+        this.setState({ hash: hashDoc });
+        localStorage.clear();
+
+        axios.get(`${DOCUMENTS_URL}/${hashDoc}`)
+            .then(res => {
+                console.log(res);
+                this.setState({ dadosDocumento: res.data });
+            })
+            .catch(error => {
+                alert("ERROR! " + error);
+                console.log(error);
+            });
     }
 
     mySubmitHandler = (event) => {
@@ -176,8 +194,8 @@ export class InfoDocument extends Component {
                                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-name">
                                             <FontAwesomeIcon icon="fingerprint" /> Hash
                                             </label>
-                                            <h3 className="text-3xl font-semibold leading-normal mb-2 text-red-800 mb-2">
-                                                {this.state.hash}
+                                        <h3 className="text-3xl font-semibold leading-normal mb-2 text-red-800 mb-2">
+                                            {this.state.dadosDocumento.hash}
                                             </h3>
                                         </div>
                                         <div class="w-full px-3 mb-6 md:mb-0 mt-4">
