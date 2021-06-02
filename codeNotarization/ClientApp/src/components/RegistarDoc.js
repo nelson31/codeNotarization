@@ -29,7 +29,7 @@ export class RegistarDoc extends Component {
             pais: '',
             cidade: '',
             numDocs: '',
-            tasks: [],
+            metadados: [],
             descricao: '',
             file: '',
             propostasConsultas: [{
@@ -55,6 +55,17 @@ export class RegistarDoc extends Component {
 
     // Enviar um mail e receber um codigo
     submitNew = (event) => {
+
+        let nam = event.target.name;
+        if (nam == "registar") {
+            alert(this.state.file)
+
+            alert(this.state.descricao)
+
+            const hashDigest = sha256(JSON.stringify(this.state.metadados));
+            alert(Base64.stringify(hashDigest))
+        }
+
         event.preventDefault();
 
         /*
@@ -86,6 +97,10 @@ export class RegistarDoc extends Component {
             */
     }
 
+    onSubmitHandler = (e) => {
+        e.preventDefault()
+    }
+
     showFile = async (e) => {
         e.preventDefault()
         const reader = new FileReader()
@@ -98,21 +113,21 @@ export class RegistarDoc extends Component {
     }
 
     addNewTask = (task, task1) => {
-        const itensCopy = Array.from(this.state.tasks);
-        itensCopy.push({ id: this.state.tasks.length, nome: task, atributo: task1 });
-        this.setState({ tasks: itensCopy });
+        const itensCopy = Array.from(this.state.metadados);
+        itensCopy.push({ nome: task, atributo: task1 });
+        this.setState({ metadados: itensCopy });
     }
 
     updateTask = ({ target }, index) => {
-        const itensCopy = Array.from(this.state.tasks);
-        itensCopy.splice(index, 1, { id: index, nome: target.value, atributo: target.value1 });
-        this.setState({ tasks: itensCopy });
+        const itensCopy = Array.from(this.state.metadados);
+        itensCopy.splice(index, 1, { nome: target.value, atributo: target.value1 });
+        this.setState({ metadados: itensCopy });
     }
 
     deleteTask = (index) => {
-        const itensCopy = Array.from(this.state.tasks);
+        const itensCopy = Array.from(this.state.metadados);
         itensCopy.splice(index, 1);
-        this.setState({ tasks: itensCopy });
+        this.setState({ metadados: itensCopy });
     }
 
     myChangeHandler = (event) => {
@@ -222,12 +237,12 @@ export class RegistarDoc extends Component {
                                                     Registar Novo Documento
                                                 </h1>
 
-                                                <form class="w-full" onSubmit={this.submitNew}>
+                                                <form class="w-full" onSubmit={this.submitNew} name="registar">
                                                     <div class="border-dashed border-2 border-gray-400 py-12 flex flex-col justify-center items-center">
                                                         <input id="button" type="file" name='file' class="text-2xl mt-2 rounded-sm px-6 py-2 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none" placeholder="Insira o ficheiro" onChange={(e) => this.showFile(e)} required />
                                                     </div>
                                                     <div class="px-3 mb-6 md:mb-0 mt-4">
-                                                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-name" name='name' type="text" onChange={this.myChangeHandler} placeholder="Descrição do ficheiro" required />
+                                                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-descricao" name='descricao' type="text" onChange={this.myChangeHandler} placeholder="Descrição do ficheiro" required />
                                                     </div>
                                                         <div>
                                                         <div className="text-2xl font-semibold leading-normal mb-4 text-gray-800 mb-2">
@@ -237,10 +252,9 @@ export class RegistarDoc extends Component {
                                                             <div>
                                                             <div className="w-full font-semibold leading-normal text-gray-800">
                                                                 <NewTaskInput onSubmit={this.addNewTask} />
-                                                                <form onSubmit={this.onSubmitHandler}>
-                                                                    {this.state.tasks.map(({ id, nome, atributo }, index) => (
+                                                                <form onSubmit={this.onSubmitHandler} name="adicionar">
+                                                                    {this.state.metadados.map(({ nome, atributo }, index) => (
                                                                         <ListItem
-                                                                            key={id}
                                                                             value={nome}
                                                                             value1={atributo}
                                                                             onChange={(event) => this.updateTask(event, index)}

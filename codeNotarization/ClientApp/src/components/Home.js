@@ -73,7 +73,7 @@ export class Home extends Component {
                 //web3.eth.sendTransaction({/* ... */ });
             } catch (error) {
                 // User denied account access...
-                alert(error);
+                alert("Falha na conexão");
                 this.setState({ logged: false });
             }
         }
