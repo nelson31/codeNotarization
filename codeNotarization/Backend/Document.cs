@@ -45,6 +45,32 @@ namespace codeNotarization.Backend
         {
             return this.metadados;
         }
+
+        /**
+         * Método que retorna os metadados do 
+         * documento em formato json
+         */
+        public String jsonifyMetadata()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("[");
+            int count = 0;
+            foreach (String key in this.metadados.Keys)
+            {
+                sb.Append("{\"nome\":\"");
+                sb.Append(key);
+                sb.Append("\",\"atributo\":\"");
+                sb.Append(this.metadados[key]);
+                if (count == this.metadados.Count - 1)
+                    sb.Append("\"}");
+                else
+                    sb.Append("\"},");
+                count++;
+            }
+            sb.Append("]");
+            return sb.ToString();
+        }
     }
 }
 
