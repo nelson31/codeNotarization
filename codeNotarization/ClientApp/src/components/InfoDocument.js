@@ -22,13 +22,13 @@ export class InfoDocument extends Component {
             logged: false,
             dadosDocumento: [],
             dadosConta: [],
-            hash: 'sfvdgbffsfdfggfddfgff234e',
-            timestamp: '2021-05-30 11:19:20 [UTC]',
-            descricao: 'Artigo de opinião sobre BlockChain',
-            dono: 'Universidade do Minho',
+            hash: '',
+            timestamp: '',
+            descricao: '',
+            dono: '',
             metadados: [],
             numPagina: 0,
-            tamanhoPag: 9
+            tamanhoPag: 5
         };
     }
 
@@ -36,16 +36,34 @@ export class InfoDocument extends Component {
 
         const hashDoc = localStorage.getItem('hash');
         this.setState({ hash: hashDoc });
-        localStorage.clear();
 
         axios.get(`${DOCUMENTS_URL}/${hashDoc}`)
             .then(res => {
                 console.log(res);
                 this.setState({ dadosDocumento: res.data });
+                this.setState({ dono: res.data.metadata[res.data.metadata.length - 1].atributo });
+                this.setState({ descricao: res.data.metadata[res.data.metadata.length - 2].atributo });
+                this.setState({ timestamp: res.data.metadata[res.data.metadata.length - 3].atributo });
+                var i = 0;
+                while (i < res.data.metadata.length) {
+                    if (res.data.metadata[i].nome == "Timestamp") {
+                        this.setState({ timestamp: res.data.metadata[i].atributo });
+                        res.data.metadata = res.data.metadata.filter((item) => item.nome !== "Timestamp");
+                    }
+                    if (res.data.metadata[i].nome == "Descricao") {
+                        this.setState({ descricao: res.data.metadata[i].atributo });
+                        res.data.metadata = res.data.metadata.filter((item) => item.nome !== "Descricao");
+                    }
+                    if (res.data.metadata[i].nome == "Proprietario") {
+                        this.setState({ dono: res.data.metadata[i].atributo });
+                        res.data.metadata = res.data.metadata.filter((item) => item.nome !== "Proprietario");
+                    }
+                    i++;
+                }
+                this.setState({ metadados: res.data.metadata });
             })
             .catch(error => {
                 alert("ERROR! " + error);
-                console.log(error);
             });
     }
 
@@ -194,7 +212,7 @@ export class InfoDocument extends Component {
                                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-name">
                                             <FontAwesomeIcon icon="fingerprint" /> Hash
                                             </label>
-                                        <h3 className="text-3xl font-semibold leading-normal mb-2 text-red-800 mb-2">
+                                        <h3 className="text-2xl font-semibold leading-normal mb-2 text-red-800 mb-2">
                                             {this.state.dadosDocumento.hash}
                                             </h3>
                                         </div>
@@ -202,7 +220,7 @@ export class InfoDocument extends Component {
                                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-name">
                                                 <FontAwesomeIcon icon="clock" /> Timestamp do pedido para este registo
                                                 </label>
-                                            <h3 className="text-3xl font-semibold leading-normal mb-2 text-pink-800 mb-2">
+                                            <h3 className="text-2xl font-semibold leading-normal mb-2 text-pink-800 mb-2">
                                                 {this.state.timestamp}
                                             </h3>
                                         </div>
@@ -215,7 +233,7 @@ export class InfoDocument extends Component {
                                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-name">
                                             <FontAwesomeIcon icon="info-circle" /> Descrição
                                             </label>
-                                        <h3 className="text-3xl font-semibold leading-normal mb-2 text-gray-800 mb-2">
+                                        <h3 className="text-2xl font-semibold leading-normal mb-2 text-gray-800 mb-2">
                                             {this.state.descricao}
                                         </h3>
                                     </div>
@@ -223,7 +241,7 @@ export class InfoDocument extends Component {
                                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-name">
                                             <FontAwesomeIcon icon="server" /> Registador/Proprietário
                                             </label>
-                                        <h3 className="text-3xl font-semibold leading-normal mb-2 text-green-800 mb-2">
+                                        <h3 className="text-2xl font-semibold leading-normal mb-2 text-green-800 mb-2">
                                             {this.state.dono}
                                         </h3>
                                     </div>
@@ -246,8 +264,8 @@ export class InfoDocument extends Component {
                                 </thead>
                                 {this.state.metadados.slice(this.state.numPagina * this.state.tamanhoPag, this.state.numPagina * this.state.tamanhoPag + this.state.tamanhoPag - 1).map(metadado =>
                                     <tr>
-                                        <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{metadado.desc}</td>
-                                        <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{metadado.valor}</td>
+                                        <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{metadado.nome}</td>
+                                        <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{metadado.atributo}</td>
                                     </tr>)}
                             </table>
                         </div>

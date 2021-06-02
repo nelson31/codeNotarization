@@ -16,6 +16,7 @@ export class Home extends Component {
     static displayName = Home.name;
 
     componentWillMount() {
+        localStorage.clear();
         this.loadBlockchainData()
     }
 

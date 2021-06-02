@@ -25,6 +25,10 @@ export class Privacy extends Component {
         };
     }
 
+    componentDidMount() {
+        localStorage.clear();
+    }
+
 
     // LOGIN com o Metamask
     login = async (event) => {
