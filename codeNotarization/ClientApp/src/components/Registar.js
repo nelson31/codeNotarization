@@ -8,6 +8,7 @@ import { NavBarOut } from './NavBarOut';
 import { REGISTERS_URL } from './api';
 import logo from './images/logo_blocknotarization.png';
 import { Rodape } from './Rodape';
+import Registry from '../abis/Registry.json'
 
 export class Registar extends Component {
     static displayName = Registar.name;
@@ -25,7 +26,8 @@ export class Registar extends Component {
             email: '',
             cidade: '',
             pais: '',
-            telemovel: ''
+            telemovel: '',
+            registed: false
         };
         this.getAccount();
     }
@@ -110,31 +112,47 @@ export class Registar extends Component {
     }
 
     // Registar novo utilizador
-    submitNew = (event) => {
+    submitNew = async (event) => {
         event.preventDefault();
 
-        axios.post(`${REGISTERS_URL}`, {
-            Address: this.state.account,
-            Name: this.state.nome,
-            Email: this.state.email,
-            Telemovel: this.state.telemovel,
-            Pais: this.state.pais,
-            Cidade: this.state.cidade
-        })
-            .then(response => {
-                //this.props.addUserToState(conta);
-                //this.props.toggle();
-                alert("Nova Conta Registada");
-                console.log(response);
-                this.setState({ dadosConta: response.data });
-                localStorage.clear();
-                localStorage.setItem("token", this.state.dadosConta.token);
-                this.props.history.push("/perfil");
+        const web3 = window.web3
+        const networkId = await web3.eth.net.getId()
+        const networkData = Registry.networks[networkId]
+        // Load account
+        const registry = new web3.eth.Contract(Registry.abi, networkData.address)
+        await registry.methods.adicionarRegister(this.state.account).send({ from: this.state.account })
+            .once('receipt', (receipt) => {
+                alert("Registado!!!")
+                this.setState({ registed: true })
             })
-            .catch(err => {
-                console.log(err)
-                this.props.history.push("/");
-            });
+
+        if (this.state.registed == true) {
+            await axios.post(`${REGISTERS_URL}`, {
+                Address: this.state.account,
+                Name: this.state.nome,
+                Email: this.state.email,
+                Telemovel: this.state.telemovel,
+                Pais: this.state.pais,
+                Cidade: this.state.cidade
+            })
+                .then(response => {
+                    //this.props.addUserToState(conta);
+                    //this.props.toggle();
+                    alert("Nova Conta Registada");
+                    console.log(response);
+                    this.setState({ dadosConta: response.data });
+                    localStorage.clear();
+                    localStorage.setItem("token", this.state.dadosConta.token);
+                    this.props.history.push("/perfil");
+                })
+                .catch(err => {
+                    console.log(err)
+                    this.props.history.push("/");
+                });
+        } else {
+            alert("Erro ao registar na blockchain!!")
+            this.props.history.push("/");
+        }
     }
 
     render() {

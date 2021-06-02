@@ -10,6 +10,6 @@ namespace codeNotarization.Models
         public string Hash { get; set; }
         public string AddrOwner { get; set; }
         public string HashMetadata { get; set; }
-        public Dictionary<String, String> Metadata { get; set; }
+        public List<MetadataModel> Metadata { get; set; }
     }
 }

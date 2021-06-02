@@ -2,6 +2,7 @@
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import decode from 'jwt-decode';
+import Web3 from 'web3'
 import sha256 from 'crypto-js/sha256';
 import hmacSHA512 from 'crypto-js/hmac-sha512';
 import Base64 from 'crypto-js/enc-base64';
@@ -12,6 +13,7 @@ import ListItem from './ListItem'
 import NewTaskInput from './NewTaskInput'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import logo from './images/logo_blocknotarization.png';
+import Registry from '../abis/Registry.json'
 
 import api from './api';
 
@@ -23,15 +25,10 @@ export class RegistarDoc extends Component {
         this.state = {
             firstName: '',
             account: '',
-            nome: '',
-            email: '',
-            telemovel: '',
-            pais: '',
-            cidade: '',
-            numDocs: '',
             metadados: [],
             descricao: '',
             file: '',
+            registed: false,
             propostasConsultas: [{
                 hash: 'xnsnjxsioxsoixs',
                 descricao: 'Exemplo de documento',
@@ -44,57 +41,79 @@ export class RegistarDoc extends Component {
         const token = localStorage.getItem('token');
         var decoded = decode(token);
         this.setState({ account: decoded.Address });
-        this.setState({ nome: decoded.Nome });
-        this.setState({ email: decoded.Email });
-        this.setState({ telemovel: decoded.Telemovel });
-        this.setState({ pais: decoded.Pais });
-        this.setState({ cidade: decoded.Cidade });
-        this.setState({ numDocs: decoded.NumDocs });
         this.setState({ firstName: decoded.Nome.split(' ', 1) });
     }
 
+    async loadWeb3() {
+        if (window.ethereum) {
+            window.web3 = new Web3(window.ethereum)
+            await window.ethereum.enable()
+        }
+        else if (window.web3) {
+            window.web3 = new Web3(window.web3.currentProvider)
+        }
+        else {
+            window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+        }
+    }
+
+    async componentWillMount() {
+        await this.loadWeb3()
+    }
+
     // Enviar um mail e receber um codigo
-    submitNew = (event) => {
+    submitNew = async (event) => {
+        event.preventDefault();
 
         let nam = event.target.name;
         if (nam == "registar") {
-            alert(this.state.file)
 
-            alert(this.state.descricao)
+            const itensCopy = Array.from(this.state.metadados);
+            const d = new Date(Date.now());
+            const date = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + " [UTC]";
+            itensCopy.push({ nome: "Timestamp", atributo: date });
+            itensCopy.push({ nome: "Descricao", atributo: this.state.descricao });
+            itensCopy.push({ nome: "Proprietario", atributo: this.state.account });
+            this.setState({ metadados: itensCopy });
 
             const hashDigest = sha256(JSON.stringify(this.state.metadados));
-            alert(Base64.stringify(hashDigest))
+            const hashMetadata = Base64.stringify(hashDigest);
+
+            const web3 = window.web3
+            const networkId = await web3.eth.net.getId()
+            const networkData = Registry.networks[networkId]
+            if (networkData) {
+                // Load account
+                const registry = new web3.eth.Contract(Registry.abi, networkData.address)
+                await registry.methods.adicionarNotarization(hashMetadata, this.state.file).send({ from: this.state.account })
+                    .once('receipt', (receipt) => {
+                        alert("Registado!!!")
+                        this.setState({ registed: true })
+                    })
+
+                if (this.state.registed == true) {
+                    await api.post(`documents`, {
+                        AddrOwner: this.state.account,
+                        Hash: this.state.file,
+                        HashMetadata: hashMetadata,
+                        Metadata: this.state.metadados
+                    })
+                        .then(response => {
+                            alert("Documento registado com sucesso!!!");
+                            this.props.history.push("/perfil");
+                        })
+                        .catch(error => {
+                            alert("Erro ao registar o documento na base de dados!!!");
+                            this.props.history.push("/perfil");
+                        })
+                } else {
+                    alert("Não foi possível registar na blockchain!!!")
+                    this.props.history.push("/perfil");
+                }
+            } else {
+                window.alert('Marketplace contract not deployed to detected network.')
+            }
         }
-
-        event.preventDefault();
-
-        /*
-        axios.post(`${REGISTERS_URL}/newDoc`, {
-            Address: this.state.account,
-            Token: null,
-            Name: null,
-            Email: null,
-            Telemovel: null,
-            Pais: null,
-            Cidade: null
-        })
-            .then(response => {
-                alert("Login efetuado com sucesso!!!");
-                console.log(response);
-                this.setState({ dadosConta: response.data });
-                localStorage.clear();
-                localStorage.setItem("token", this.state.dadosConta.token);
-                this.props.history.push("/perfil");
-            })
-            .catch(error => {
-                alert("O seu endereço não é válido, registe-se primeiro!!");
-                this.setState({
-                    error1:
-                        "Houve um problema com o login, verifique as suas senhas."
-                });
-                this.props.history.push("/registar");
-            })
-            */
     }
 
     onSubmitHandler = (e) => {

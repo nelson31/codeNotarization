@@ -39,8 +39,13 @@ namespace codeNotarization.Controllers
         {
             try
             {
+                Dictionary<String, String> dicMeta = new Dictionary<string, string>();
+                foreach(MetadataModel m in doc.Metadata)
+                {
+                    dicMeta.Add(m.Nome, m.Atributo);
+                }
                 // Adicionar À DB
-                this.model.addDocument(doc.Hash, doc.AddrOwner, doc.Metadata);
+                this.model.addDocument(doc.Hash, doc.AddrOwner, dicMeta);
                 // Resposta
                 return Ok();
             }

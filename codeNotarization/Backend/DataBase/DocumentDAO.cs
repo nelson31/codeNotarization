@@ -185,16 +185,17 @@ namespace codeNotarization.DataBase
 				sb.Append("insert into metadata (hashDocumento,nome,atributo) values ('");
 				sb.Append(hash);
 				sb.Append("','");
-				metadados.TryGetValue(name, out atributo);
 				sb.Append(name);
 				sb.Append("','");
-				sb.Append(atributo);
+				sb.Append(metadados[name]);
 				sb.Append("')");
 				atributo = "";
 
 				MySqlDataAdapter msda = new MySqlDataAdapter(sb.ToString(), conn);
 
 				msda.Fill(dt);
+
+				sb.Clear();
 			}
 		}
 
