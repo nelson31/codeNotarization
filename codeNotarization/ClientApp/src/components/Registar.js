@@ -94,7 +94,6 @@ export class Registar extends Component {
             })
                 .then(response => {
                     alert("Login efetuado com sucesso!!!");
-                    console.log(response);
                     this.setState({ dadosConta: response.data });
                     localStorage.clear();
                     localStorage.setItem("token", this.state.dadosConta.token);
@@ -139,14 +138,12 @@ export class Registar extends Component {
                     //this.props.addUserToState(conta);
                     //this.props.toggle();
                     alert("Nova Conta Registada");
-                    console.log(response);
                     this.setState({ dadosConta: response.data });
                     localStorage.clear();
                     localStorage.setItem("token", this.state.dadosConta.token);
                     this.props.history.push("/perfil");
                 })
                 .catch(err => {
-                    console.log(err)
                     this.props.history.push("/");
                 });
         } else {
