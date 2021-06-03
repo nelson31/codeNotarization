@@ -29,16 +29,16 @@ namespace codeNotarization.Controllers
             _logger = logger;
         }
 
-        /* GET /documents/hashDoc
+        /* GET /documents
          * Obter um documento dado o seu hash
          */
-        [HttpGet("{hashDoc}")]
+        [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetDoc(string hashDoc)
+        public async Task<IActionResult> GetDoc([FromQuery] string hash)
         {
             try
             {
-                Document d = model.getDocument(hashDoc);
+                Document d = model.getDocument(hash);
                 DocumentModel dModel = new DocumentModel();
                 dModel.AddrOwner = d.getaddrOwner();
                 dModel.Hash = d.getHash();

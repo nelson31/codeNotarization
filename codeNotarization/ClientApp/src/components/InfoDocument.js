@@ -37,7 +37,11 @@ export class InfoDocument extends Component {
         const hashDoc = localStorage.getItem('hash');
         this.setState({ hash: hashDoc });
 
-        axios.get(`${DOCUMENTS_URL}/${hashDoc}`)
+        axios.get(`${DOCUMENTS_URL}`, {
+            params: {
+                hash: hashDoc
+            }
+        })
             .then(res => {
                 console.log(res);
                 this.setState({ dadosDocumento: res.data });
@@ -262,7 +266,7 @@ export class InfoDocument extends Component {
                                         <th class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">Valor</th>
                                     </tr>
                                 </thead>
-                                {this.state.metadados.slice(this.state.numPagina * this.state.tamanhoPag, this.state.numPagina * this.state.tamanhoPag + this.state.tamanhoPag - 1).map(metadado =>
+                                {this.state.metadados.slice(this.state.numPagina * this.state.tamanhoPag, this.state.numPagina * this.state.tamanhoPag + this.state.tamanhoPag).map(metadado =>
                                     <tr>
                                         <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{metadado.nome}</td>
                                         <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{metadado.atributo}</td>

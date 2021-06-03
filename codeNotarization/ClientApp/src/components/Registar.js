@@ -121,7 +121,6 @@ export class Registar extends Component {
         const registry = new web3.eth.Contract(Registry.abi, networkData.address)
         await registry.methods.adicionarRegister(this.state.account).send({ from: this.state.account })
             .once('receipt', (receipt) => {
-                alert("Registado!!!")
                 this.setState({ registed: true })
             })
 

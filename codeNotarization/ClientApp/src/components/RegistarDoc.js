@@ -24,16 +24,12 @@ export class RegistarDoc extends Component {
         super(props);
         this.state = {
             firstName: '',
+            nome: '',
             account: '',
             metadados: [],
             descricao: '',
             file: '',
-            registed: false,
-            propostasConsultas: [{
-                hash: 'xnsnjxsioxsoixs',
-                descricao: 'Exemplo de documento',
-                timestamp: '2021-05-30 16:04:20 [UTC]'
-            }]
+            registed: false
         };
     }
 
@@ -41,6 +37,7 @@ export class RegistarDoc extends Component {
         const token = localStorage.getItem('token');
         var decoded = decode(token);
         this.setState({ account: decoded.Address });
+        this.setState({ nome: decoded.Nome });
         this.setState({ firstName: decoded.Nome.split(' ', 1) });
     }
 
@@ -73,7 +70,7 @@ export class RegistarDoc extends Component {
             const date = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + " [UTC]";
             itensCopy.push({ nome: "Timestamp", atributo: date });
             itensCopy.push({ nome: "Descricao", atributo: this.state.descricao });
-            itensCopy.push({ nome: "Proprietario", atributo: this.state.account });
+            itensCopy.push({ nome: "Proprietario", atributo: this.state.nome });
             this.setState({ metadados: itensCopy });
 
             const hashDigest = sha256(JSON.stringify(this.state.metadados));
@@ -87,7 +84,6 @@ export class RegistarDoc extends Component {
                 const registry = new web3.eth.Contract(Registry.abi, networkData.address)
                 await registry.methods.adicionarNotarization(hashMetadata, this.state.file).send({ from: this.state.account })
                     .once('receipt', (receipt) => {
-                        alert("Registado!!!")
                         this.setState({ registed: true })
                     })
 
