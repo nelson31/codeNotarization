@@ -104,5 +104,22 @@ namespace codeNotarization.Backend
             }
             return d;
         }
+
+        /*
+         * Método que obtem o register dado o seu endereço
+         */
+        public Register getRegister(String addr)
+        {
+            Register r = null;
+            if (rDAO.contains(addr))
+            {
+                r = rDAO.get(addr);
+            }
+            else
+            {
+                throw new RegisterExistsException("O Register nao existe na DB!");
+            }
+            return r;
+        }
     }
 }

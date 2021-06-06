@@ -40,14 +40,25 @@ export class Perfil extends Component {
     componentDidMount() {
         const token = localStorage.getItem('token');
         var decoded = decode(token);
-        this.setState({ account: decoded.Address });
-        this.setState({ nome: decoded.Nome });
-        this.setState({ email: decoded.Email });
-        this.setState({ telemovel: decoded.Telemovel });
-        this.setState({ pais: decoded.Pais });
-        this.setState({ cidade: decoded.Cidade });
-        this.setState({ numDocs: decoded.NumDocs });
-        this.setState({ firstName: decoded.Nome.split(' ', 1) });
+        // Buscar os dados ao servidor
+        api.get(`registers`, {
+            params: {
+                addr: decoded.Address
+            }
+        })
+            .then(res => {
+                this.setState({ account: res.data.address });
+                this.setState({ nome: res.data.name });
+                this.setState({ email: res.data.email });
+                this.setState({ telemovel: res.data.telemovel });
+                this.setState({ cidade: res.data.cidade });
+                this.setState({ pais: res.data.pais });
+                this.setState({ numDocs: res.data.numDocs });
+            })
+            .catch(error => {
+                alert("Erro ao obter os dados do Register!!!");
+                this.props.history.push("/perfil");
+            })
     }
 
     myChangeHandler = (event) => {

@@ -62,6 +62,7 @@ namespace codeNotarization.Controllers
             }
         }
 
+
         /* POST /registers
          * Criacao de uma nova conta
          */
@@ -95,6 +96,35 @@ namespace codeNotarization.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+
+        /* GET /registers
+         * Obter um register dado o seu endereço
+         */
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetReg([FromQuery] string addr)
+        {
+            try
+            {
+                Register r = model.getRegister(addr);
+                RegisterModel rModel = new RegisterModel();
+                rModel.Address = r.getAddress();
+                rModel.Name = r.getName();
+                rModel.NumDocs = r.getNumDocs().ToString();
+                rModel.Email = r.getEmail();
+                rModel.Telemovel = r.getTelemovel();
+                rModel.Cidade = r.getCidade();
+                rModel.Pais = r.getPais();
+                return Ok(rModel);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
 
         public override NoContentResult NoContent()
         {
