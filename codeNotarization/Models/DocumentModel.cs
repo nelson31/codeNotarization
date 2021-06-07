@@ -11,5 +11,7 @@ namespace codeNotarization.Models
         public string AddrOwner { get; set; }
         public string HashMetadata { get; set; }
         public List<MetadataModel> Metadata { get; set; }
+        public string Timestamp { get; set; }
+        public string Descricao { get; set; }
     }
 }

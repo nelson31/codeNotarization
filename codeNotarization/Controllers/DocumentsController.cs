@@ -86,6 +86,46 @@ namespace codeNotarization.Controllers
             }
         }
 
+        /* GET /documents/listaDocs
+         * Obter a lista de documentos associados a um determinado register (addr)
+         */
+        [HttpGet("listaDocs")]
+        [Authorize]
+        public ActionResult listaDocuments([FromQuery] string addr)
+        {
+            List<Document> ld = null;
+            List<DocumentModel> ldm = new List<DocumentModel>();
+            try
+            {
+                ld = this.model.getDocuments(addr);
+                foreach (Document d in ld)
+                {
+                    DocumentModel dm = new DocumentModel();
+                    dm.AddrOwner = d.getaddrOwner();
+                    dm.Hash = d.getHash();
+                    foreach (string key in d.getMetadados().Keys)
+                    {
+                        if (key.Equals("Timestamp"))
+                        {
+                            dm.Timestamp = d.getMetadados()[key];
+                        }
+                        if (key.Equals("Descricao"))
+                        {
+                            dm.Descricao = d.getMetadados()[key];
+                        }
+                    }
+                    ldm.Add(dm);
+                }
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e.Message);
+                return BadRequest(e.Message);
+            }
+
+            return Ok(ldm);
+        }
+
         public override NoContentResult NoContent()
         {
             return base.NoContent();

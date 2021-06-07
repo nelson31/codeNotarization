@@ -23,11 +23,7 @@ export class Documentos extends Component {
             pais: '',
             cidade: '',
             numDocs: '',
-            propostasConsultas: [{
-                hash: 'xnsnjxsioxsoixs',
-                descricao: 'Exemplo de documento',
-                timestamp: '2021-05-30 16:04:20 [UTC]'
-            }]
+            listaDocs: []
         };
     }
 
@@ -35,13 +31,22 @@ export class Documentos extends Component {
         const token = localStorage.getItem('token');
         var decoded = decode(token);
         this.setState({ account: decoded.Address });
-        this.setState({ nome: decoded.Nome });
-        this.setState({ email: decoded.Email });
-        this.setState({ telemovel: decoded.Telemovel });
-        this.setState({ pais: decoded.Pais });
-        this.setState({ cidade: decoded.Cidade });
-        this.setState({ numDocs: decoded.NumDocs });
         this.setState({ firstName: decoded.Nome.split(' ', 1) });
+
+        // Buscar a lista de documentos registados de um dado register
+        api.get(`documents/listaDocs`, {
+            params: {
+                addr: decoded.Address
+            }
+        })
+            .then(res => {
+                console.log(res);
+                this.setState({ listaDocs: res.data.reverse() });
+            })
+            .catch(error => {
+                alert("ERROR! " + error);
+                console.log(error);
+            });
     }
 
     transferir = (event) => {
@@ -66,7 +71,7 @@ export class Documentos extends Component {
             })
     }
 
-    eliminar = (event) => {
+    geraPdf = (event) => {
 
         let val = event.target.dataset.id;
 
@@ -205,13 +210,13 @@ export class Documentos extends Component {
                                                                 <th class="p-3 font-bold uppercase bg-gray-200 text-gray-700 border-right border-top border-gray-300 hidden lg:table-cell"></th>
                                                             </tr>
                                                         </thead>
-                                                        {this.state.propostasConsultas.map(documento =>
+                                                        {this.state.listaDocs.map(documento =>
                                                             <tr class="border border-gray-300">
                                                                 <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{documento.hash}</td>
                                                                 <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{documento.descricao}</td>
                                                                 <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{documento.timestamp}</td>
                                                                 <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell"> <button class="hover:bg-blue-500 bg-blue-400 text-blue-dark font-semibold text-white py-2 px-3 border rounded" key={documento.hash} data-id={documento.hash} onClick={this.transferir}> Transferir Propriedade </button> </td>
-                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell"><button class="hover:bg-red-500 bg-red-400 text-blue-dark font-semibold text-white py-2 px-3 border rounded" key={documento.hash} data-id={documento.hash} onClick={this.eliminar}> Eliminar </button> </td>
+                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell"><button class="hover:bg-orange-500 bg-orange-400 text-blue-dark font-semibold text-white py-2 px-3 border rounded" key={documento.hash} data-id={documento.hash} onClick={this.geraPdf}> Gerar Pdf </button> </td>
                                                             </tr>)
                                                         }
 

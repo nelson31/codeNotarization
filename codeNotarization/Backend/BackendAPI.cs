@@ -121,5 +121,23 @@ namespace codeNotarization.Backend
             }
             return r;
         }
+
+        /*
+         * Método que dado um endereço de um Register nos devolve a lista de documentos que 
+         * este possui
+         */
+         public List<Document> getDocuments(String addr)
+        {
+            Register r = null;
+            if (rDAO.contains(addr))
+            {
+                r = rDAO.get(addr);
+            }
+            else
+            {
+                throw new RegisterExistsException("O Register nao existe na DB!");
+            }
+            return r.getDocumentos(); ;
+        }
     }
 }
