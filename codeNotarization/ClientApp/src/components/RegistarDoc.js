@@ -257,7 +257,7 @@ export class RegistarDoc extends Component {
                                                         <input id="button" type="file" name='file' class="text-2xl mt-2 rounded-sm px-6 py-2 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none" placeholder="Insira o ficheiro" onChange={(e) => this.showFile(e)} required />
                                                     </div>
                                                     <div class="px-3 mb-6 md:mb-0 mt-4">
-                                                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-descricao" name='descricao' type="text" onChange={this.myChangeHandler} placeholder="Descrição do ficheiro" required />
+                                                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-descricao" name='descricao' type="text" onChange={this.myChangeHandler} pattern="[^'\x22]+" placeholder="Descrição do ficheiro" required />
                                                     </div>
                                                         <div>
                                                         <div className="text-2xl font-semibold leading-normal mb-4 text-gray-800 mb-2">

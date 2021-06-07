@@ -201,7 +201,7 @@ export class Registar extends Component {
                                     <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-nome">
                                         Nome
                                     </label>
-                                    <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-nome" name='nome' type="text" placeholder="Nome completo" onChange={this.myChangeHandler} required />
+                                    <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-nome" name='nome' type="text" placeholder="Nome completo" pattern="[^'\x22]+" onChange={this.myChangeHandler} required />
                                 </div>
                             </div>
                             <div class="flex flex-wrap -mx-3 ">
@@ -209,7 +209,7 @@ export class Registar extends Component {
                                     <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-email">
                                         Email
                                         </label>
-                                    <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-email" name='email' type="email" placeholder="exemplo@email.com" onChange={this.myChangeHandler} required />
+                                    <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-email" name='email' type="email" placeholder="exemplo@email.com" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" onChange={this.myChangeHandler} required />
                                 </div>
                             </div>
                             <div class="flex flex-wrap -mx-3 ">
@@ -217,7 +217,7 @@ export class Registar extends Component {
                                     <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-telemovel">
                                         Telemóvel
                                         </label>
-                                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-telemovel" name='telemovel' type="tel" minlength="9" onChange={this.myChangeHandler} placeholder="9*********" required />
+                                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-telemovel" name='telemovel' type="tel" minlength="9" pattern="[0-9]+" onChange={this.myChangeHandler} placeholder="9*********" required />
                                 </div>
                             </div>
                             <div class="flex flex-wrap -mx-3 ">

@@ -299,7 +299,13 @@ export class Home extends Component {
                                 <form onSubmit={this.mySubmitHandler}>
                                     <div class="flex flex-wrap -mx-3 my-3 ">
                                         <div class="w-full px-3 mb-6 md:mb-0">
-                                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-hashDoc" name='hashDoc' type="text" placeholder="Insira aqui o Hash do documento a procurar..." onChange={this.myChangeHandler} required />
+                                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                                                id="grid-hashDoc"
+                                                name='hashDoc'
+                                                type="text"
+                                                pattern="[^'\x22]+"
+                                                placeholder="Insira aqui o Hash do documento a procurar..."
+                                                onChange={this.myChangeHandler} required />
                                         </div>
                                         <div className="text-center mt-6">
                                             <button

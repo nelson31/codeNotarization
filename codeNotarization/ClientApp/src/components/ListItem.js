@@ -7,11 +7,13 @@ const ListItem = ({ onChange, onDelete, value, value1 }) => {
             <input
                 class="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell"
                 value={value}
+                pattern="[^'\x22]+"
                 readonly="readonly"
             />
             <input
                 class="p-3 font-bold bg-gray-100 text-gray-600 border border-gray-300 hidden lg:table-cell"
                 value={value1}
+                pattern="[^'\x22]+"
                 readonly="readonly"
             />
             <button class="font-semibold py-2 px-3 rounded" onClick={onDelete}> <FontAwesomeIcon icon="trash-alt" /> </button>
