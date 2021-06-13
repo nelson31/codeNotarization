@@ -13,6 +13,11 @@ namespace codeNotarization.Backend
         private String hash;
 
         /**
+         * Variavel que guarda o hash dos metadados
+         */
+        private String hashMetadata;
+
+        /**
          * Variável que guarda o endereço do 
          * owner do ficheiro
          */
@@ -24,9 +29,10 @@ namespace codeNotarization.Backend
          */
         private Dictionary<String, String> metadados;
 
-        public Document(String hash, String addrOwner, Dictionary<String, String> metadados)
+        public Document(String hash, String hashMetadata, String addrOwner, Dictionary<String, String> metadados)
         {
             this.hash = hash;
+            this.hashMetadata = hashMetadata;
             this.addrOwner = addrOwner;
             this.metadados = metadados;
         }
@@ -34,6 +40,11 @@ namespace codeNotarization.Backend
         public String getHash()
         {
             return this.hash;
+        }
+
+        public String getHashMetadata()
+        {
+            return this.hashMetadata;
         }
 
         public String getaddrOwner()
@@ -44,6 +55,26 @@ namespace codeNotarization.Backend
         public Dictionary<String, String> getMetadados()
         {
             return this.metadados;
+        }
+
+        public void setHash(String hash)
+        {
+            this.hash = hash;
+        }
+
+        public void setHashMetadata(String hashMetadata)
+        {
+            this.hashMetadata = hashMetadata;
+        }
+
+        public void setaddrOwner(String addrOwner)
+        {
+            this.addrOwner = addrOwner;
+        }
+
+        public void setMetadados(Dictionary<String, String> metadados)
+        {
+            this.metadados = metadados;
         }
 
         /**

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq;  
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using codeNotarization.DataBase;
 using codeNotarization.Exceptions;
@@ -61,31 +63,13 @@ namespace codeNotarization.Backend
          * Método que permite adicionar um novo documento 
          * à base de dados
          */
-        public void addDocument(String hash, String addrOwner, Dictionary<String, String> metadados)
+        public void addDocument(String hash, String hashMetadata, String addrOwner, Dictionary<String, String> metadados)
         {
-            Document d = new Document(hash, addrOwner, metadados);
+            Document d = new Document(hash, hashMetadata, addrOwner, metadados);
             if (dDAO.contains(hash))
                 throw new DocumentExistsException("Este documento já existe na base de dados...");
             dDAO.put(hash, d);
             rDAO.increaseNumDocs(addrOwner);
-        }
-
-        /**
-         * Método que permite alterar a propriedade de um 
-         * documento já existente
-         */
-        public void changeProperty(String hashDocument, String addrOwner, String addrNewOwner)
-        {
-            if (!dDAO.contains(hashDocument))
-                throw new DocumentExistsException("Está a tentar alterar propriedade de um documento inexistente");
-            if (!rDAO.contains(addrOwner))
-                throw new RegisterExistsException("Está a tentar alterar propriedade de um documento cujo proprietário não existe");
-            if (!rDAO.contains(addrNewOwner))
-                throw new RegisterExistsException("Está a tentar alterar propriedade de um documento cujo novo proprietário não existe");
-
-            rDAO.increaseNumDocs(addrNewOwner);
-            rDAO.decreaseNumDocs(addrOwner);
-            dDAO.changeOwner(hashDocument, addrOwner, addrNewOwner);
         }
 
         /*
@@ -138,6 +122,78 @@ namespace codeNotarization.Backend
                 throw new RegisterExistsException("O Register nao existe na DB!");
             }
             return r.getDocumentos(); ;
+        }
+
+        /*
+         * Método que serve para adicionar um pedido de transferencia de propriedade de um documento
+         */
+        public void addTransferRequest(String hashDoc, String addrNewProp, String addrRequester)
+        {
+            TransferRequest tr = new TransferRequest(addrRequester, addrNewProp, hashDoc);
+            if (rDAO.contains(addrNewProp))
+                throw new RegisterExistsException("O Register ao qual pretende transferir a propriedade de um doc. nao existe na DB!");
+            if (rDAO.contains(addrRequester))
+                throw new RegisterExistsException("O Register que pretende transferir propriedade de um doc. nao existe na DB!");
+            if (dDAO.contains(hashDoc))
+                throw new DocumentExistsException("O documento nao existe na DB!");
+            if (rDAO.containsTransferRequest(tr))
+            {
+                throw new TransferRequestExistsException("O pedido de transferencia já foi efetuado anteriormente!!");
+            }
+            rDAO.putTransferRequest(tr);
+        }
+
+        /*
+         * Método que serve para aceitar um pedido de transferencia de propriedade de um documento
+         */
+        public void aceitaTransferRequest(String hashDoc, String hashMetadata, String addrNewProp, String addrRequester)
+        {
+            TransferRequest tr = new TransferRequest(addrRequester, addrNewProp, hashDoc);
+            if (rDAO.contains(addrNewProp))
+                throw new RegisterExistsException("O Register ao qual pretende transferir a propriedade de um doc. nao existe na DB!");
+            if (rDAO.contains(addrRequester))
+                throw new RegisterExistsException("O Register que pretende transferir propriedade de um doc. nao existe na DB!");
+            if (dDAO.contains(hashDoc))
+                throw new DocumentExistsException("O documento nao existe na DB!");
+
+            // Vai buscar a base de dados o documento
+            Document document = dDAO.get(hashDoc);
+            // Vai buscar os dados do novo register
+            Register newProp = rDAO.get(addrNewProp);
+            // Altera os campos necessarios do docuemnto
+            document.setaddrOwner(newProp.getAddress());
+            // Vai buscar os metadados
+            Dictionary<string,string> meta = document.getMetadados();
+            if (meta["Proprietario"] != null)
+            {
+                meta["Proprietario"] = newProp.getName();
+            }
+            // Alterar o hashMetadata
+            document.setHashMetadata(hashMetadata);
+            // Timestamp?
+            // Efetua a mudança de propriedade do docuemnto
+            dDAO.changeOwner(document);
+            // Altera os numeros de docs
+            rDAO.increaseNumDocs(addrNewProp);
+            rDAO.decreaseNumDocs(addrRequester);
+
+            // Apaga o pedido de transferencia
+            rDAO.deleteTransferRequest(tr);
+        }
+
+        /*
+         * Método que serve para rejeitar um pedido de transferencia de propriedade de um documento
+         */
+        public void rejeitaTransferRequest(String hashDoc, String addrNewProp, String addrRequester)
+        {
+            TransferRequest tr = new TransferRequest(addrRequester, addrNewProp, hashDoc);
+            if (rDAO.contains(addrNewProp))
+                throw new RegisterExistsException("O Register ao qual pretende transferir a propriedade de um doc. nao existe na DB!");
+            if (rDAO.contains(addrRequester))
+                throw new RegisterExistsException("O Register que pretende transferir propriedade de um doc. nao existe na DB!");
+            if (dDAO.contains(hashDoc))
+                throw new DocumentExistsException("O documento nao existe na DB!");
+            rDAO.deleteTransferRequest(tr);
         }
     }
 }

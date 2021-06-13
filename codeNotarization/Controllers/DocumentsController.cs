@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
-using System.Linq;
 using codeNotarization.Models;
-using Newtonsoft.Json;
 using System;
 using codeNotarization.Backend;
 using codeNotarization.Services;
@@ -75,7 +73,7 @@ namespace codeNotarization.Controllers
                     dicMeta.Add(m.Nome, m.Atributo);
                 }
                 // Adicionar À DB
-                this.model.addDocument(doc.Hash, doc.AddrOwner, dicMeta);
+                this.model.addDocument(doc.Hash, doc.HashMetadata, doc.AddrOwner, dicMeta);
                 // Resposta
                 return Ok();
             }

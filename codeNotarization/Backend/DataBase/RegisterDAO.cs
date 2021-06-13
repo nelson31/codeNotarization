@@ -59,6 +59,8 @@ namespace codeNotarization.DataBase
 
 			msda.Fill(dt);
 
+			connection.Close();
+
 			return dt.Rows.Count == 1;
 		}
 
@@ -195,6 +197,7 @@ namespace codeNotarization.DataBase
 				msda = new MySqlDataAdapter(sb.ToString(), connection);
 				msda.Fill(dt);
 			}
+			connection.Close();
 		}
 
 		/**
@@ -228,6 +231,113 @@ namespace codeNotarization.DataBase
 				msda = new MySqlDataAdapter(sb.ToString(), connection);
 				msda.Fill(dt);
 			}
+			connection.Close();
+		}
+
+		/**
+		 * Metodo que serve para verificar se um pedido de transferencia ja pertence a DB
+		 */
+		public bool containsTransferRequest(TransferRequest tr)
+		{
+			MySqlConnection connection = new MySqlConnection(this.connectionstring);
+			connection.Open();
+			DataTable dt = new DataTable();
+
+			StringBuilder sb = new StringBuilder();
+			sb.Append("select * from transferrequests where addrNewProp='");
+			sb.Append(tr.getaddrNewProp());
+			sb.Append("' and addrRequester='");
+			sb.Append(tr.getaddrRequester());
+			sb.Append("' and hashDocument='");
+			sb.Append(tr.getHashDoc());
+			sb.Append("'");
+
+			MySqlDataAdapter msda = new MySqlDataAdapter(sb.ToString(), connection);
+
+			msda.Fill(dt);
+			connection.Close();
+
+			return dt.Rows.Count == 1;
+		}
+
+		/**
+		 * Método que permite adicionar um novo pedido de transferencia
+		 * de documento a um determinado Register
+		 */
+		public void putTransferRequest(TransferRequest tr)
+		{
+			MySqlConnection connection = new MySqlConnection(this.connectionstring);
+			connection.Open();
+			DataTable dt = new DataTable();
+
+			StringBuilder sb = new StringBuilder();
+			sb.Append("insert into transferrequests (addrNewProp,addrRequester,hashDocument) values ('");
+			sb.Append(tr.getaddrNewProp());
+			sb.Append("','");
+			sb.Append(tr.getaddrRequester());
+			sb.Append("','");
+			sb.Append(tr.getHashDoc());
+			sb.Append("')");
+
+			MySqlDataAdapter msda = new MySqlDataAdapter(sb.ToString(), connection);
+
+			msda.Fill(dt);
+			connection.Close();
+		}
+
+		/**
+		 * Método que permite ler da base de dados todos os pedidos de transferencia 
+		 * de propriedade de documento de um determinado Register
+		 */
+		public List<TransferRequest> getTransferRequests(String address)
+		{
+			List<TransferRequest> result = new List<TransferRequest>();
+			MySqlConnection connection = new MySqlConnection(this.connectionstring);
+			connection.Open();
+			DataTable dt = new DataTable();
+
+			StringBuilder sb = new StringBuilder();
+			sb.Append("select * from transferrequests where addrNewProp='");
+			sb.Append(address);
+			sb.Append("'");
+
+			MySqlDataAdapter msda = new MySqlDataAdapter(sb.ToString(), connection);
+
+			msda.Fill(dt);
+
+			foreach (DataRow dr in dt.Rows)
+			{
+				result.Add(new TransferRequest(dr.Field<String>("addrRequester"), dr.Field<String>("addrNewProp"), dr.Field<String>("hashDocument")));
+			}
+			connection.Close();
+
+			return result;
+		}
+
+		/**
+		 * Metodo que serve para apagar um determinado pedido de transferencia de propriedade
+		 */
+		 public void deleteTransferRequest(TransferRequest tr)
+		{
+			// delete from transferrequests where addrNewProp = '' and addrRequester='' and hashDocument='';
+
+			MySqlConnection connection = new MySqlConnection(this.connectionstring);
+			connection.Open();
+			DataTable dt = new DataTable();
+
+			StringBuilder sb = new StringBuilder();
+			sb.Append("delete from transferrequests where addrNewProp='");
+			sb.Append(tr.getaddrNewProp());
+			sb.Append("' and addrRequester='");
+			sb.Append(tr.getaddrRequester());
+			sb.Append("' and hashDocument='");
+			sb.Append(tr.getHashDoc());
+			sb.Append("'");
+
+			MySqlDataAdapter msda = new MySqlDataAdapter(sb.ToString(), connection);
+
+			msda.Fill(dt);
+			connection.Close();
 		}
 	}
 }

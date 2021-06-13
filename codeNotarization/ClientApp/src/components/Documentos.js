@@ -51,46 +51,17 @@ export class Documentos extends Component {
 
     transferir = (event) => {
 
-        let val = event.target.dataset.id;
+        let hash = event.target.dataset.hash;
 
         event.preventDefault();
 
-        api.get(`/consultas/aceitarCons`, {
-            params: {
-                id: val,
-                action: true
-            }
-        })
-            .then(res => {
-                console.log(res);
-                alert("Proposta Aceite ");
-                this.props.history.push("/perfilPaciente");
-            })
-            .catch(err => {
-                console.log(err);
-            })
     }
 
     geraPdf = (event) => {
 
-        let val = event.target.dataset.id;
+        let hash = event.target.dataset.hash;
 
         event.preventDefault();
-
-        api.get(`/consultas/aceitarCons`, {
-            params: {
-                id: val,
-                action: false
-            }
-        })
-            .then(res => {
-                console.log(res);
-                alert("Proposta Rejeitada ");
-                this.props.history.push("/perfilPaciente");
-            })
-            .catch(err => {
-                console.log(err);
-            })
     }
 
     myChangeHandler = (event) => {

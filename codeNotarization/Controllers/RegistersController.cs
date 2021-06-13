@@ -125,6 +125,69 @@ namespace codeNotarization.Controllers
             }
         }
 
+        /* POST /registers/transferrequest
+         * Criacao de um novo pedido de transferencia
+         */
+        [HttpPost("transferrequest")]
+        [Authorize]
+        public async Task<IActionResult> TransferRequest([FromBody] TransferRequestModel trm)
+        {
+            try
+            {
+                // Adicionar À DB
+                this.model.addTransferRequest(trm.HashDoc, trm.AddrNewProp, trm.AddrRequester);
+                // Resposta
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
+        /* POST /registers/aceitatransferrequest
+         * Acontece quando um register aceita a transferencia de propriedade
+         */
+        [HttpPost("aceitatransferrequest")]
+        [Authorize]
+        public async Task<IActionResult> AceitaTransferRequest([FromBody] TransferRequestModel trm)
+        {
+            try
+            {
+                // Adicionar À DB
+                this.model.aceitaTransferRequest(trm.HashDoc, trm.HashMetadata, trm.AddrNewProp, trm.AddrRequester);
+                // Resposta
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
+        /* POST /registers/rejeitatransferrequest
+         * Acontece quando um register rejeita a transferencia de propriedade
+         */
+        [HttpPost("rejeitatransferrequest")]
+        [Authorize]
+        public async Task<IActionResult> RejeitaTransferRequest([FromBody] TransferRequestModel trm)
+        {
+            try
+            {
+                // Adicionar À DB
+                this.model.rejeitaTransferRequest(trm.HashDoc, trm.AddrNewProp, trm.AddrRequester);
+                // Resposta
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
 
         public override NoContentResult NoContent()
         {

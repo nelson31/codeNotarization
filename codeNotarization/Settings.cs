@@ -7,7 +7,7 @@ namespace codeNotarization
 {
     public static class Settings
     {
-        /* ConsultaJa_2020_LI4 com SHA1*/
-        public static string Secret = "3ddde439eddee2980894427d99f3a21ff72116a8";
+        /* BlockNotarization_2021_LEI com SHA1*/
+        public static string Secret = "cbf8b055126a50e397ee6522bf967076326468bc";
     }
 }

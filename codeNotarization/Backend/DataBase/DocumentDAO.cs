@@ -131,7 +131,7 @@ namespace codeNotarization.DataBase
 			msda.Fill(dt);
 			if (dt.Rows.Count == 1)
 			{
-				d = new Document(dt.Rows[0].Field<String>("hash"), dt.Rows[0].Field<String>("addrOwner"), this.getDocumentMetadata(connection, hash));
+				d = new Document(dt.Rows[0].Field<String>("hash"), dt.Rows[0].Field<String>("hashMetadata"), dt.Rows[0].Field<String>("addrOwner"), this.getDocumentMetadata(connection, hash));
 			}
 			connection.Close();
 
@@ -163,7 +163,7 @@ namespace codeNotarization.DataBase
 			msda.Fill(dt);
 			foreach (DataRow dr in dt.Rows)
 			{
-				list.Add(new Document(dr.Field<String>("hash"), dr.Field<String>("addrOwner"), this.getDocumentMetadata(connection, dr.Field<String>("hash"))));
+				list.Add(new Document(dr.Field<String>("hash"), dr.Field<String>("hashMetadata"), dr.Field<String>("addrOwner"), this.getDocumentMetadata(connection, dr.Field<String>("hash"))));
 			}
 			connection.Close();
 
@@ -200,6 +200,33 @@ namespace codeNotarization.DataBase
 		}
 
 		/**
+		 * Método que faz update aos metadados de um determinado documento
+		 */
+		public void updateDocumentMetadata(MySqlConnection conn, Document document)
+		{
+			DataTable dt = new DataTable();
+			StringBuilder sb = new StringBuilder();
+			Dictionary<String, String> metadados = document.getMetadados();
+
+			foreach (String name in metadados.Keys)
+			{
+				sb.Append("update metadata set atributo='");
+				sb.Append(metadados[name]);
+				sb.Append("' where hashDocumento='");
+				sb.Append(document.getHash());
+				sb.Append("' and name='");
+				sb.Append(name);
+				sb.Append("'");
+
+				MySqlDataAdapter msda = new MySqlDataAdapter(sb.ToString(), conn);
+
+				msda.Fill(dt);
+
+				sb.Clear();
+			}
+		}
+
+		/**
 		 * Método que permite adicionar um novo documento à base de dados
 		 */
 		public void put(String hash, Document document)
@@ -216,7 +243,9 @@ namespace codeNotarization.DataBase
 			sb.Append(hash);
 			sb.Append("','");
 			sb.Append(document.getaddrOwner());
-			sb.Append("','metadatahash')");
+			sb.Append("','");
+			sb.Append(document.getHashMetadata());
+			sb.Append("')");
 
 			MySqlDataAdapter msda = new MySqlDataAdapter(sb.ToString(), connection);
 
@@ -229,26 +258,31 @@ namespace codeNotarization.DataBase
 
 		/**
 		 * Método que permite alterar o dono de 
-		 * um determinado documento
+		 * um determinado documento (o document ja vem devidamente alterado)
 		 */
-		public void changeOwner(String hash, String addrOwner, String addrNewOwner)
+		public void changeOwner(Document document)
 		{
 			MySqlConnection connection = new MySqlConnection(this.connectionstring);
-
 			connection.Open();
-
 			DataTable dt = new DataTable();
 
 			StringBuilder sb = new StringBuilder();
 			sb.Append("update documents set addrOwner='");
-			sb.Append(addrNewOwner);
+			sb.Append(document.getaddrOwner());
+			sb.Append("', hashMetadata='");
+			sb.Append(document.getHashMetadata());
 			sb.Append("' where hash='");
-			sb.Append(hash);
+			sb.Append(document.getHash());
 			sb.Append("'");
 
 			MySqlDataAdapter msda = new MySqlDataAdapter(sb.ToString(), connection);
 
+			// Fazer update aos metadados também
+			this.updateDocumentMetadata(connection, document);
+
 			msda.Fill(dt);
+
+			connection.Close();
 		}
 	}
 }
