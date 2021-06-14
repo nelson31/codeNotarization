@@ -24,6 +24,7 @@ export class TransferRequest extends Component {
         super(props);
         this.state = {
             account: '',
+            addrNewProp: '',
             notarizationsCount: 0,
             notarizations: [],
             loading: true,
@@ -81,8 +82,37 @@ export class TransferRequest extends Component {
             });
     }
 
-    efetuaTransf = (e) => {
+    efetuaTransf = async (e) => {
         e.preventDefault()
+
+        try {
+            // Verificar se o endereço inserido existe na base de dados
+            const web3 = new Web3("http://localhost:8545")
+            const blocknotarization = new web3.eth.Contract(Registry.abi, Registry.networks[5777].address)
+            const regist = await blocknotarization.methods.isRegister(this.state.addrNewProp).call()
+
+            if (regist == false) {
+                alert("Endereço inserido não se encontra registado!")
+                this.props.history.push("/perfil")
+            } else {
+                // Registar o pedido na DB
+                await api.post(`registers/transferrequest`, {
+                    HashDoc: this.state.hash,
+                    AddrRequester: this.state.account,
+                    AddrNewProp: this.state.addrNewProp
+                })
+                    .then(response => {
+                        alert("Pedido de transferência efetuado com sucesso!!!");
+                        this.props.history.push("/perfil");
+                    })
+                    .catch(error => {
+                        alert("Erro ao efetuar o pedido de transferência na base de dados!!!");
+                        this.props.history.push("/perfil");
+                    })
+            }
+        } catch (error) {
+            alert("Argumento inválido!")
+        }
     }
 
     myChangeHandler = (event) => {
@@ -238,7 +268,7 @@ export class TransferRequest extends Component {
                                                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-nome">
                                                                 <FontAwesomeIcon icon="address-book" /> Inserir o endereço do Novo Proprietário para este documento:
                                                                 </label>
-                                                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-nome" name='nome' type="text" placeholder="Address" pattern="[^'\x22]+" onChange={this.myChangeHandler} required />
+                                                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-addrNewProp" name='addrNewProp' type="text" placeholder="Address" pattern="[^'\x22]+" onChange={this.myChangeHandler} required />
                                                         </div>
                                                     </div>
 

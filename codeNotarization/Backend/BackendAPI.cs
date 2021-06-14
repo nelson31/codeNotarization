@@ -130,11 +130,11 @@ namespace codeNotarization.Backend
         public void addTransferRequest(String hashDoc, String addrNewProp, String addrRequester)
         {
             TransferRequest tr = new TransferRequest(addrRequester, addrNewProp, hashDoc);
-            if (rDAO.contains(addrNewProp))
+            if (!rDAO.contains(addrNewProp))
                 throw new RegisterExistsException("O Register ao qual pretende transferir a propriedade de um doc. nao existe na DB!");
-            if (rDAO.contains(addrRequester))
+            if (!rDAO.contains(addrRequester))
                 throw new RegisterExistsException("O Register que pretende transferir propriedade de um doc. nao existe na DB!");
-            if (dDAO.contains(hashDoc))
+            if (!dDAO.contains(hashDoc))
                 throw new DocumentExistsException("O documento nao existe na DB!");
             if (rDAO.containsTransferRequest(tr))
             {
@@ -149,11 +149,11 @@ namespace codeNotarization.Backend
         public void aceitaTransferRequest(String hashDoc, String hashMetadata, String addrNewProp, String addrRequester)
         {
             TransferRequest tr = new TransferRequest(addrRequester, addrNewProp, hashDoc);
-            if (rDAO.contains(addrNewProp))
+            if (!rDAO.contains(addrNewProp))
                 throw new RegisterExistsException("O Register ao qual pretende transferir a propriedade de um doc. nao existe na DB!");
-            if (rDAO.contains(addrRequester))
+            if (!rDAO.contains(addrRequester))
                 throw new RegisterExistsException("O Register que pretende transferir propriedade de um doc. nao existe na DB!");
-            if (dDAO.contains(hashDoc))
+            if (!dDAO.contains(hashDoc))
                 throw new DocumentExistsException("O documento nao existe na DB!");
 
             // Vai buscar a base de dados o documento
@@ -187,11 +187,11 @@ namespace codeNotarization.Backend
         public void rejeitaTransferRequest(String hashDoc, String addrNewProp, String addrRequester)
         {
             TransferRequest tr = new TransferRequest(addrRequester, addrNewProp, hashDoc);
-            if (rDAO.contains(addrNewProp))
+            if (!rDAO.contains(addrNewProp))
                 throw new RegisterExistsException("O Register ao qual pretende transferir a propriedade de um doc. nao existe na DB!");
-            if (rDAO.contains(addrRequester))
+            if (!rDAO.contains(addrRequester))
                 throw new RegisterExistsException("O Register que pretende transferir propriedade de um doc. nao existe na DB!");
-            if (dDAO.contains(hashDoc))
+            if (!dDAO.contains(hashDoc))
                 throw new DocumentExistsException("O documento nao existe na DB!");
             rDAO.deleteTransferRequest(tr);
         }
