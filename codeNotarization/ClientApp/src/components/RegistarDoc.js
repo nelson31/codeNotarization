@@ -58,7 +58,7 @@ export class RegistarDoc extends Component {
         await this.loadWeb3()
     }
 
-    // Enviar um mail e receber um codigo
+    // Submeter o registo
     submitNew = async (event) => {
         event.preventDefault();
 

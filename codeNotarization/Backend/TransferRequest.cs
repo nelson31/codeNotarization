@@ -23,6 +23,16 @@ namespace codeNotarization.Backend
          */
         private String hashDoc;
 
+        /**
+         * Variavel que guarda a descricao de um documento
+         */
+        private String descricao;
+
+        /**
+         * Variavel que guarda o nome do requester
+         */
+        private String requester;
+
 
         public TransferRequest(String addrRequester, String addrNewProp, String hashDoc)
         {
@@ -44,6 +54,31 @@ namespace codeNotarization.Backend
         public String getaddrNewProp()
         {
             return this.addrNewProp;
+        }
+
+        public String getDescricao()
+        {
+            return this.descricao;
+        }
+
+        public String getRequester()
+        {
+            return this.requester;
+        }
+
+        public void setDescricao(string descricao)
+        {
+            this.descricao = descricao;
+        }
+
+        public void setaddrRequester(string requester)
+        {
+            this.addrRequester = requester;
+        }
+
+        public void setRequester(string requester)
+        {
+            this.requester = requester;
         }
     }
 }

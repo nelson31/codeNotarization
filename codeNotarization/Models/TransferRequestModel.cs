@@ -11,5 +11,7 @@ namespace codeNotarization.Models
         public string HashMetadata { get; set; }
         public string AddrRequester { get; set; }
         public string AddrNewProp { get; set; }
+        public string Descricao { get; set; }
+        public string Requester { get; set; }
     }
 }

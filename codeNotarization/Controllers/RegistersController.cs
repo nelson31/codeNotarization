@@ -151,6 +151,40 @@ namespace codeNotarization.Controllers
             }
         }
 
+        /* GET /registers/transferrequests
+         * Obtencao da lista de pedidos de transferencia de um dado Register
+         */
+        [HttpGet("transferrequests")]
+        [Authorize]
+        public async Task<IActionResult> GetTransferRequests([FromQuery] string addr)
+        {
+            List<TransferRequest> trs = null;
+            List<TransferRequestModel> trsm = new List<TransferRequestModel>();
+            try
+            {
+                // Obter a lista de transferencias
+                trs = this.model.getTransferRequests(addr);
+                foreach (TransferRequest tr in trs)
+                {
+                    TransferRequestModel trm = new TransferRequestModel();
+                    trm.AddrNewProp = tr.getaddrNewProp();
+                    trm.AddrRequester = tr.getaddrRequester();
+                    trm.Descricao = tr.getDescricao();
+                    trm.HashDoc = tr.getHashDoc();
+                    trm.Requester = tr.getRequester();
+
+                    trsm.Add(trm);
+                }
+                // Resposta
+                return Ok(trsm);
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
         /* POST /registers/aceitatransferrequest
          * Acontece quando um register aceita a transferencia de propriedade
          */

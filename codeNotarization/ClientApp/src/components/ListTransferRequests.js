@@ -2,10 +2,17 @@
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import decode from 'jwt-decode';
+import Web3 from 'web3'
+import sha256 from 'crypto-js/sha256';
+import axios from 'axios';
+import hmacSHA512 from 'crypto-js/hmac-sha512';
+import Base64 from 'crypto-js/enc-base64';
 import { NavBarIn } from './NavBarIn';
 import { RodapePerfil } from './RodapePerfil';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import logo from './images/logo_blocknotarization.png';
+import { REGISTERS_URL, DOCUMENTS_URL } from './api';
+import Registry from '../abis/Registry.json'
 
 import api from './api';
 
@@ -23,7 +30,10 @@ export class ListTransferRequests extends Component {
             pais: '',
             cidade: '',
             numDocs: '',
-            listaDocs: []
+            listaTrans: [],
+            addrOwner: '',
+            metadados: [],
+            transfered: false
         };
     }
 
@@ -34,14 +44,14 @@ export class ListTransferRequests extends Component {
         this.setState({ firstName: decoded.Nome.trim().split(' ', 1) });
 
         // Buscar a lista de documentos registados de um dado register
-        api.get(`documents/listaDocs`, {
+        api.get(`registers/transferrequests`, {
             params: {
                 addr: decoded.Address
             }
         })
             .then(res => {
                 console.log(res);
-                this.setState({ listaDocs: res.data.reverse() });
+                this.setState({ listaTrans: res.data.reverse() });
             })
             .catch(error => {
                 alert("ERROR! " + error);
@@ -49,23 +59,114 @@ export class ListTransferRequests extends Component {
             });
     }
 
-    aceitar = (event) => {
+    aceitar = async (event) => {
 
-        let hash = event.target.dataset.id;
-
-        localStorage.setItem("hashDoc", hash);
-
-        this.props.history.push("/transProp");
+        let hashDoc = event.target.dataset.id;
 
         event.preventDefault();
+
+        // Buscar os dados do documento
+        await axios.get(`${DOCUMENTS_URL}`, {
+            params: {
+                hash: hashDoc
+            }
+        })
+            .then(res => {
+                console.log(res);
+                var i = 0;
+                while (i < res.data.metadata.length) {
+                    if (res.data.metadata[i].nome == "Proprietario") {
+                        res.data.metadata[i].atributo = this.state.nome;
+                    }
+                    i++;
+                }
+                this.setState({ addrOwner: res.data.addrOwner });
+                this.setState({ metadados: res.data.metadata });
+            })
+            .catch(error => {
+                alert("ERROR! " + error);
+            });
+
+        const hashDigest = sha256(JSON.stringify(this.state.metadados));
+        const hashMetadata = Base64.stringify(hashDigest);
+
+        try {
+            // Efetua a transferencia de propriedade na BlockChain
+            const web3 = window.web3
+            const networkId = await web3.eth.net.getId()
+            const networkData = Registry.networks[networkId]
+            if (networkData) {
+                // Load account
+                const registry = new web3.eth.Contract(Registry.abi, networkData.address)
+                await registry.methods.transferirPropriedade(hashMetadata, hashDoc).send({ from: this.state.account })
+                    .once('receipt', (receipt) => {
+                        this.setState({ transfered: true })
+                    })
+
+                // Efetuar transferencia na DB
+                if (this.state.transfered == true) {
+                    await api.post(`registers/aceitatransferrequest`, {
+                        HashDoc: hashDoc,
+                        AddrNewProp: this.state.account,
+                        AddrRequester: this.state.addrOwner,
+                        HashMetadata: hashMetadata
+                    })
+                        .then(response => {
+                            alert("Transferência de propriedade efetuada com sucesso!!!");
+                            this.props.history.push("/perfil");
+                        })
+                        .catch(error => {
+                            alert("Não foi possível registar a transferência na base de dados!!!");
+                            this.props.history.push("/perfil");
+                        })
+                } else {
+                    alert("Não foi possível registar a transferência na blockchain!!!")
+                    this.props.history.push("/perfil");
+                }
+            } else {
+                window.alert('Marketplace contract not deployed to detected network.')
+            }
+
+        } catch (error) {
+            alert("Argumento inválido!")
+        }
 
     }
 
-    rejeitar = (event) => {
+    rejeitar = async (event) => {
 
-        let hash = event.target.dataset.id;
+        let hashDoc = event.target.dataset.id;
 
         event.preventDefault();
+
+        // Buscar os dados do documento
+        await axios.get(`${DOCUMENTS_URL}`, {
+            params: {
+                hash: hashDoc
+            }
+        })
+            .then(res => {
+                console.log(res);
+                this.setState({ addrOwner: res.data.addrOwner });
+            })
+            .catch(error => {
+                alert("ERROR! " + error);
+            });
+
+        // Rejeitar o pedido
+        await api.post(`registers/rejeitatransferrequest`, {
+            HashDoc: hashDoc,
+            AddrNewProp: this.state.account,
+            AddrRequester: this.state.addrOwner
+        })
+            .then(response => {
+                alert("Pedido de transferência de propriedade rejeitado!!!");
+                this.props.history.push("/perfil");
+            })
+            .catch(error => {
+                alert("Erro ao rejeitar o pedido de transferência de propriedade!!!");
+                this.props.history.push("/perfil");
+            })
     }
 
     myChangeHandler = (event) => {
@@ -189,21 +290,20 @@ export class ListTransferRequests extends Component {
                                                             <tr>
                                                                 <th class="p-3 font-bold uppercase bg-gray-200 text-gray-700 border border-gray-300 hidden lg:table-cell">Hash</th>
                                                                 <th class="p-3 font-bold uppercase bg-gray-200 text-gray-700 border border-gray-300 hidden lg:table-cell">Descricao</th>
-                                                                <th class="p-3 font-bold uppercase bg-gray-200 text-gray-700 border border-gray-300 hidden lg:table-cell">Timestamp Registo</th>
+                                                                <th class="p-3 font-bold uppercase bg-gray-200 text-gray-700 border border-gray-300 hidden lg:table-cell">Proprietário</th>
                                                                 <th class="p-3 font-bold uppercase bg-gray-200 text-gray-700 border-top border-gray-300 hidden lg:table-cell"></th>
                                                                 <th class="p-3 font-bold uppercase bg-gray-200 text-gray-700 border-right border-top border-gray-300 hidden lg:table-cell"></th>
                                                             </tr>
                                                         </thead>
-                                                        {this.state.listaDocs.map(documento =>
+                                                        {this.state.listaTrans.map(pedido =>
                                                             <tr class="border border-gray-300">
-                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{documento.hash}</td>
-                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{documento.descricao}</td>
-                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{documento.timestamp}</td>
-                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell"> <button class="hover:bg-green-500 bg-blue-400 text-blue-dark font-semibold text-white py-2 px-3 border rounded" key={documento.hash} data-id={documento.hash} onClick={this.aceitar}> Aceitar </button> </td>
-                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell"><button class="hover:bg-red-500 bg-orange-400 text-blue-dark font-semibold text-white py-2 px-3 border rounded" key={documento.hash} data-id={documento.hash} onClick={this.rejeitar}> Rejeitar </button> </td>
+                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{pedido.hashDoc}</td>
+                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{pedido.descricao}</td>
+                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{pedido.requester}</td>
+                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell"> <button class="hover:bg-green-500 bg-green-400 text-blue-dark font-semibold text-white py-2 px-3 border rounded" key={pedido.hashDoc} data-id={pedido.hashDoc} onClick={this.aceitar}> Aceitar </button> </td>
+                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell"><button class="hover:bg-red-500 bg-red-400 text-blue-dark font-semibold text-white py-2 px-3 border rounded" key={pedido.hashDoc} data-id={pedido.hashDoc} onClick={this.rejeitar}> Rejeitar </button> </td>
                                                             </tr>)
                                                         }
-
                                                     </table>
                                                 </div>
                                             </div>

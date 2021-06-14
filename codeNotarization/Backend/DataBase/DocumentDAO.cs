@@ -214,7 +214,7 @@ namespace codeNotarization.DataBase
 				sb.Append(metadados[name]);
 				sb.Append("' where hashDocumento='");
 				sb.Append(document.getHash());
-				sb.Append("' and name='");
+				sb.Append("' and nome='");
 				sb.Append(name);
 				sb.Append("'");
 

@@ -143,6 +143,25 @@ namespace codeNotarization.Backend
             rDAO.putTransferRequest(tr);
         }
 
+        /**
+         * Metodo que nos devolve a lista de pedidos de transferencia de um dado register
+         */
+         public List<TransferRequest> getTransferRequests(string addr)
+        {
+            if (!rDAO.contains(addr))
+                throw new RegisterExistsException("O Register não existe na DB!");
+            List<TransferRequest> trs = rDAO.getTransferRequests(addr);
+            // Juntar as descricoes de ficheiros
+            foreach (TransferRequest tr in trs)
+            {
+                Document d = dDAO.get(tr.getHashDoc());
+                Register r = rDAO.get(tr.getaddrRequester());
+                tr.setDescricao(d.getMetadados()["Descricao"]);
+                tr.setRequester(r.getName());
+            }
+            return trs;
+        }
+
         /*
          * Método que serve para aceitar um pedido de transferencia de propriedade de um documento
          */
@@ -187,6 +206,7 @@ namespace codeNotarization.Backend
         public void rejeitaTransferRequest(String hashDoc, String addrNewProp, String addrRequester)
         {
             TransferRequest tr = new TransferRequest(addrRequester, addrNewProp, hashDoc);
+            Console.WriteLine(addrRequester);
             if (!rDAO.contains(addrNewProp))
                 throw new RegisterExistsException("O Register ao qual pretende transferir a propriedade de um doc. nao existe na DB!");
             if (!rDAO.contains(addrRequester))
