@@ -11,6 +11,7 @@ import { RegistarDoc } from "./components/RegistarDoc";
 import { Logout } from "./components/Logout";
 import { Registar } from "./components/Registar";
 import { TransferRequest } from "./components/TranferRequest";
+import { ListTransferRequests } from "./components/ListTransferRequests";
 
 
 const isAuthenticated = () => {
@@ -66,6 +67,7 @@ const Routes = () => (
             <PrivateRoute exact path='/documentos' component={Documentos} />
             <PrivateRoute exact path='/registarDoc' component={RegistarDoc} />
             <PrivateRoute exact path='/transProp' component={TransferRequest} />
+            <PrivateRoute exact path='/listTransProp' component={ListTransferRequests} />
             <PrivateRoute exact path='/logout' component={Logout} />
         </Switch>
     </BrowserRouter>

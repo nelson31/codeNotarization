@@ -1,65 +1,71 @@
 ﻿import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import decode from 'jwt-decode';
+import { NavBarIn } from './NavBarIn';
+import { RodapePerfil } from './RodapePerfil';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import logo from './images/logo_blocknotarization.png';
 
 import api from './api';
-import decode from 'jwt-decode';
-import { NavBarIn } from './NavBarIn';
-import { RodapePerfil } from './RodapePerfil';
 
-
-export class Perfil extends Component {
-    static displayName = Perfil.name;
+export class ListTransferRequests extends Component {
+    static displayName = ListTransferRequests.name;
 
     constructor(props) {
         super(props);
-        const token = localStorage.getItem('token')
-
-        let loggedIn = true
-        if (token == null) {
-            loggedIn = false
-        }
         this.state = {
-            loggedIn,
             firstName: '',
-            notificacoes: [],
-            dadosPerfil: [],
-            consultasAgendadas: [],
             account: '',
             nome: '',
             email: '',
             telemovel: '',
             pais: '',
             cidade: '',
-            numDocs: ''
+            numDocs: '',
+            listaDocs: []
         };
     }
 
-    
     componentDidMount() {
         const token = localStorage.getItem('token');
         var decoded = decode(token);
-        // Buscar os dados ao servidor
-        api.get(`registers`, {
+        this.setState({ account: decoded.Address });
+        this.setState({ firstName: decoded.Nome.trim().split(' ', 1) });
+
+        // Buscar a lista de documentos registados de um dado register
+        api.get(`documents/listaDocs`, {
             params: {
                 addr: decoded.Address
             }
         })
             .then(res => {
-                this.setState({ account: res.data.address });
-                this.setState({ nome: res.data.name });
-                this.setState({ email: res.data.email });
-                this.setState({ telemovel: res.data.telemovel });
-                this.setState({ cidade: res.data.cidade });
-                this.setState({ pais: res.data.pais });
-                this.setState({ numDocs: res.data.numDocs });
-                this.setState({ firstName: res.data.name.trim().split(' ', 1) });
+                console.log(res);
+                this.setState({ listaDocs: res.data.reverse() });
             })
             .catch(error => {
-                alert("Erro ao obter os dados do Register!!!");
-                this.props.history.push("/perfil");
-            })
+                alert("ERROR! " + error);
+                console.log(error);
+            });
+    }
+
+    aceitar = (event) => {
+
+        let hash = event.target.dataset.id;
+
+        localStorage.setItem("hashDoc", hash);
+
+        this.props.history.push("/transProp");
+
+        event.preventDefault();
+
+    }
+
+    rejeitar = (event) => {
+
+        let hash = event.target.dataset.id;
+
+        event.preventDefault();
     }
 
     myChangeHandler = (event) => {
@@ -133,9 +139,9 @@ export class Perfil extends Component {
                     {/* Divider */}
                     <hr className="my-4 md:min-w-full" />
                 </nav>
-                <main className="relative md:ml-64 profile-page">
+                <main className="relative md:ml-64 historico-page">
                     <NavBarIn />
-                    <section className="relative block" style={{ height: "400px" }}>
+                    <section className="relative block" style={{ height: "450px" }}>
                         <div
                             className="absolute top-0 w-full h-full bg-center bg-cover"
                             style={{
@@ -169,51 +175,40 @@ export class Perfil extends Component {
                     </section>
                     <section className="relative py-16 bg-gray-300">
                         <div className="container mx-auto px-4">
-                            <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
+                            <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-32 shadow-xl rounded-lg -mt-64">
                                 <div className="px-6">
-                                    <div className="flex flex-wrap justify-center">
-                                        <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center pb-32">
-                                            <div className="relative">
-                                                <img
-                                                    alt="..."
-                                                    src={require("./images/profile-placeholder.jpg")}
-                                                    className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16"
-                                                    style={{ maxWidth: "150px" }}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="text-center mt-0">
-                                        <h3 className="text-4xl font-semibold leading-normal mb-2 text-gray-800 mb-2">
-                                            Perfil
-                                        </h3>
-                                    </div>
-
-                                    <div className="mt-10 py-10 border-t border-gray-300 text-center">
+                                    <div className=" py-10 border-t border-gray-300 text-center">
                                         <div className="flex flex-wrap justify-center">
-                                            <div className="w-full lg:w-9/12 px-4">
-                                                <p className="mb-4 text-xl text-bold leading-relaxed text-gray-800">
-                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Nome:</b> {this.state.nome}
-                                                </p>
-                                                <p className="mb-4 text-xl text-bold leading-relaxed text-gray-800">
-                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Endereço da Conta:</b> {this.state.account}
-                                                </p>
-                                                <p className="mb-4 text-xl text-bold leading-relaxed text-gray-800">
-                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Email:</b> {this.state.email}
-                                                </p>
-                                                <p className="mb-4 text-xl text-bold leading-relaxed text-gray-800">
-                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Telemóvel:</b> {this.state.telemovel}
-                                                </p>
-                                                <p className="mb-4 text-xl text-bold leading-relaxed text-gray-800">
-                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> Número de Documentos Registados:</b> {this.state.numDocs}
-                                                </p>
-                                                <p className="mb-4 text-xl text-bold leading-relaxed text-gray-800">
-                                                    <b className="mb-4 text-xl text-bold leading-relaxed text-gray-900"> País e Cidade:</b> {this.state.pais} - {this.state.cidade}
-                                                </p>
+                                            <div className="w-full px-4">
+                                                <h1 className="text-4xl font-semibold leading-normal mb-4 text-gray-800 mb-2">
+                                                    Pedidos de Transferência de documentos
+                                                </h1>
+                                                <div>
+                                                    <table class="border-collapse w-full mb-32">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="p-3 font-bold uppercase bg-gray-200 text-gray-700 border border-gray-300 hidden lg:table-cell">Hash</th>
+                                                                <th class="p-3 font-bold uppercase bg-gray-200 text-gray-700 border border-gray-300 hidden lg:table-cell">Descricao</th>
+                                                                <th class="p-3 font-bold uppercase bg-gray-200 text-gray-700 border border-gray-300 hidden lg:table-cell">Timestamp Registo</th>
+                                                                <th class="p-3 font-bold uppercase bg-gray-200 text-gray-700 border-top border-gray-300 hidden lg:table-cell"></th>
+                                                                <th class="p-3 font-bold uppercase bg-gray-200 text-gray-700 border-right border-top border-gray-300 hidden lg:table-cell"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        {this.state.listaDocs.map(documento =>
+                                                            <tr class="border border-gray-300">
+                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{documento.hash}</td>
+                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{documento.descricao}</td>
+                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{documento.timestamp}</td>
+                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell"> <button class="hover:bg-green-500 bg-blue-400 text-blue-dark font-semibold text-white py-2 px-3 border rounded" key={documento.hash} data-id={documento.hash} onClick={this.aceitar}> Aceitar </button> </td>
+                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell"><button class="hover:bg-red-500 bg-orange-400 text-blue-dark font-semibold text-white py-2 px-3 border rounded" key={documento.hash} data-id={documento.hash} onClick={this.rejeitar}> Rejeitar </button> </td>
+                                                            </tr>)
+                                                        }
+
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -223,4 +218,7 @@ export class Perfil extends Component {
             </>
         )
     }
+
 }
+
+

@@ -203,6 +203,15 @@ export class RegistarDoc extends Component {
                                     </Link>
                         </li>
 
+                        <li className="items-center">
+                            <Link
+                                className="text-gray-800 hover:text-gray-600 text-xs uppercase py-3 font-bold block"
+                                to="/listTransProp"
+                            >
+                                <FontAwesomeIcon icon="list-alt" /><i className="text-gray-500 mr-2 text-sm"></i> Pedidos Transferência
+                                    </Link>
+                        </li>
+
                     </ul>
                     {/* Divider */}
                     <hr className="my-4 md:min-w-full" />
