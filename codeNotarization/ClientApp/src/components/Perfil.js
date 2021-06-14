@@ -54,7 +54,7 @@ export class Perfil extends Component {
                 this.setState({ cidade: res.data.cidade });
                 this.setState({ pais: res.data.pais });
                 this.setState({ numDocs: res.data.numDocs });
-                this.setState({ firstName: res.data.name.split(' ', 1) });
+                this.setState({ firstName: res.data.name.trim().split(' ', 1) });
             })
             .catch(error => {
                 alert("Erro ao obter os dados do Register!!!");

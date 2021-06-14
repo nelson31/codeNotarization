@@ -31,7 +31,7 @@ export class Documentos extends Component {
         const token = localStorage.getItem('token');
         var decoded = decode(token);
         this.setState({ account: decoded.Address });
-        this.setState({ firstName: decoded.Nome.split(' ', 1) });
+        this.setState({ firstName: decoded.Nome.trim().split(' ', 1) });
 
         // Buscar a lista de documentos registados de um dado register
         api.get(`documents/listaDocs`, {
@@ -51,7 +51,11 @@ export class Documentos extends Component {
 
     transferir = (event) => {
 
-        let hash = event.target.dataset.hash;
+        let hash = event.target.dataset.id;
+
+        localStorage.setItem("hashDoc", hash);
+
+        this.props.history.push("/transProp");
 
         event.preventDefault();
 
@@ -59,7 +63,7 @@ export class Documentos extends Component {
 
     geraPdf = (event) => {
 
-        let hash = event.target.dataset.hash;
+        let hash = event.target.dataset.id;
 
         event.preventDefault();
     }

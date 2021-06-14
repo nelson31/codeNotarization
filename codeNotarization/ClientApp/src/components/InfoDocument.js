@@ -45,9 +45,6 @@ export class InfoDocument extends Component {
             .then(res => {
                 console.log(res);
                 this.setState({ dadosDocumento: res.data });
-                this.setState({ dono: res.data.metadata[res.data.metadata.length - 1].atributo });
-                this.setState({ descricao: res.data.metadata[res.data.metadata.length - 2].atributo });
-                this.setState({ timestamp: res.data.metadata[res.data.metadata.length - 3].atributo });
                 var i = 0;
                 while (i < res.data.metadata.length) {
                     if (res.data.metadata[i].nome == "Timestamp") {

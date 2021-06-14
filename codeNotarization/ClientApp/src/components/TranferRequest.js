@@ -6,143 +6,83 @@ import Web3 from 'web3'
 import sha256 from 'crypto-js/sha256';
 import hmacSHA512 from 'crypto-js/hmac-sha512';
 import Base64 from 'crypto-js/enc-base64';
+import axios from 'axios';
 
 import { NavBarIn } from './NavBarIn';
 import { RodapePerfil } from './RodapePerfil';
-import ListItem from './ListItem'
-import NewTaskInput from './NewTaskInput'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import logo from './images/logo_blocknotarization.png';
 import Registry from '../abis/Registry.json'
+import { DOCUMENTS_URL } from './api';
 
 import api from './api';
 
-export class RegistarDoc extends Component {
-    static displayName = RegistarDoc.name;
+export class TransferRequest extends Component {
+    static displayName = TransferRequest.name;
 
     constructor(props) {
         super(props);
         this.state = {
-            firstName: '',
-            nome: '',
             account: '',
-            metadados: [],
+            notarizationsCount: 0,
+            notarizations: [],
+            loading: true,
+            logged: false,
+            dadosDocumento: [],
+            dadosConta: [],
+            hash: '',
+            timestamp: '',
             descricao: '',
-            file: '',
-            registed: false
+            dono: '',
+            nome: '',
+            firstName: ''
         };
     }
 
     componentDidMount() {
+
+        // Buscar o token
         const token = localStorage.getItem('token');
         var decoded = decode(token);
         this.setState({ account: decoded.Address });
         this.setState({ nome: decoded.Nome });
         this.setState({ firstName: decoded.Nome.trim().split(' ', 1) });
-    }
+        // Buscar o hash do documento
+        const hashDoc = localStorage.getItem('hashDoc');
+        this.setState({ hash: hashDoc });
 
-    async loadWeb3() {
-        if (window.ethereum) {
-            window.web3 = new Web3(window.ethereum)
-            await window.ethereum.enable()
-        }
-        else if (window.web3) {
-            window.web3 = new Web3(window.web3.currentProvider)
-        }
-        else {
-            window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
-        }
-    }
-
-    async componentWillMount() {
-        await this.loadWeb3()
-    }
-
-    // Enviar um mail e receber um codigo
-    submitNew = async (event) => {
-        event.preventDefault();
-
-        let nam = event.target.name;
-        if (nam == "registar") {
-
-            const itensCopy = Array.from(this.state.metadados);
-            const d = new Date(Date.now());
-            const date = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + " [UTC]";
-            itensCopy.push({ nome: "Timestamp", atributo: date });
-            itensCopy.push({ nome: "Descricao", atributo: this.state.descricao });
-            itensCopy.push({ nome: "Proprietario", atributo: this.state.nome });
-            this.setState({ metadados: itensCopy });
-
-            const hashDigest = sha256(JSON.stringify(this.state.metadados));
-            const hashMetadata = Base64.stringify(hashDigest);
-
-            const web3 = window.web3
-            const networkId = await web3.eth.net.getId()
-            const networkData = Registry.networks[networkId]
-            if (networkData) {
-                // Load account
-                const registry = new web3.eth.Contract(Registry.abi, networkData.address)
-                await registry.methods.adicionarNotarization(hashMetadata, this.state.file).send({ from: this.state.account })
-                    .once('receipt', (receipt) => {
-                        this.setState({ registed: true })
-                    })
-
-                if (this.state.registed == true) {
-                    await api.post(`documents`, {
-                        AddrOwner: this.state.account,
-                        Hash: this.state.file,
-                        HashMetadata: hashMetadata,
-                        Metadata: this.state.metadados
-                    })
-                        .then(response => {
-                            alert("Documento registado com sucesso!!!");
-                            this.props.history.push("/perfil");
-                        })
-                        .catch(error => {
-                            alert("Erro ao registar o documento na base de dados!!!");
-                            this.props.history.push("/perfil");
-                        })
-                } else {
-                    alert("Não foi possível registar na blockchain!!!")
-                    this.props.history.push("/perfil");
-                }
-            } else {
-                window.alert('Marketplace contract not deployed to detected network.')
+        axios.get(`${DOCUMENTS_URL}`, {
+            params: {
+                hash: hashDoc
             }
-        }
+        })
+            .then(res => {
+                console.log(res);
+                this.setState({ dadosDocumento: res.data });
+                var i = 0;
+                while (i < res.data.metadata.length) {
+                    if (res.data.metadata[i].nome == "Timestamp") {
+                        this.setState({ timestamp: res.data.metadata[i].atributo });
+                        res.data.metadata = res.data.metadata.filter((item) => item.nome !== "Timestamp");
+                    }
+                    if (res.data.metadata[i].nome == "Descricao") {
+                        this.setState({ descricao: res.data.metadata[i].atributo });
+                        res.data.metadata = res.data.metadata.filter((item) => item.nome !== "Descricao");
+                    }
+                    if (res.data.metadata[i].nome == "Proprietario") {
+                        this.setState({ dono: res.data.metadata[i].atributo });
+                        res.data.metadata = res.data.metadata.filter((item) => item.nome !== "Proprietario");
+                    }
+                    i++;
+                }
+            })
+            .catch(error => {
+                alert("ERROR! " + error);
+            });
     }
 
-    onSubmitHandler = (e) => {
+    efetuaTransf = (e) => {
         e.preventDefault()
-    }
-
-    showFile = async (e) => {
-        e.preventDefault()
-        const reader = new FileReader()
-        reader.onload = async (e) => {
-            const text = (e.target.result)
-            const hashDigest = sha256(text);
-            this.setState({ file: Base64.stringify(hashDigest) })
-        };
-        reader.readAsText(e.target.files[0])
-    }
-
-    addNewTask = (task, task1) => {
-        const itensCopy = Array.from(this.state.metadados);
-        itensCopy.push({ nome: task, atributo: task1 });
-        this.setState({ metadados: itensCopy });
-    }
-
-    updateTask = ({ target }, index) => {
-        const itensCopy = Array.from(this.state.metadados);
-        itensCopy.splice(index, 1, { nome: target.value, atributo: target.value1 });
-        this.setState({ metadados: itensCopy });
-    }
-
-    deleteTask = (index) => {
-        const itensCopy = Array.from(this.state.metadados);
-        itensCopy.splice(index, 1);
-        this.setState({ metadados: itensCopy });
     }
 
     myChangeHandler = (event) => {
@@ -247,43 +187,63 @@ export class RegistarDoc extends Component {
                                 <div className="px-6">
                                     <div className=" py-10 border-t border-gray-300 text-center">
                                         <div className="flex flex-wrap justify-center">
-                                            <div className="w-full px-4">
-                                                <h1 className="text-4xl font-semibold leading-normal mb-4 text-gray-800 mb-2">
-                                                    Registar Novo Documento
-                                                </h1>
-
-                                                <form class="w-full" onSubmit={this.submitNew} name="registar">
-                                                    <div class="border-dashed border-2 border-gray-400 py-12 flex flex-col justify-center items-center">
-                                                        <input id="button" type="file" name='file' class="text-2xl mt-2 rounded-sm px-6 py-2 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none" placeholder="Insira o ficheiro" onChange={(e) => this.showFile(e)} required />
-                                                    </div>
-                                                    <div class="px-3 mb-6 md:mb-0 mt-4">
-                                                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-descricao" name='descricao' type="text" onChange={this.myChangeHandler} pattern="[^'\x22]+" placeholder="Descrição do ficheiro" required />
-                                                    </div>
-                                                        <div>
-                                                        <div className="text-2xl font-semibold leading-normal mb-4 text-gray-800 mb-2">
-                                                            <br />
-                                                            <h3> Adicionar Metadados </h3>
+                                            <div class="flex flex-wrap container px-4 pb-2">
+                                                <div class="w-full pb-2">
+                                                    <h1 className="text-4xl font-semibold leading-normal mb-4 text-gray-800 mb-2"> Transferência de Propriedade </h1>
+                                                </div>
+                                                <div class="w-full md:w-1/2">
+                                                    <div class="flex flex-wrap -mx-3">
+                                                        <div class="w-full px-3 mb-6 md:mb-0 mt-4">
+                                                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-name">
+                                                                <FontAwesomeIcon icon="fingerprint" /> Hash
+                                                                </label>
+                                                            <h3 className="text-2xl font-semibold leading-normal mb-2 text-red-800 mb-2">
+                                                                {this.state.dadosDocumento.hash}
+                                                            </h3>
                                                         </div>
-                                                            <div>
-                                                            <div className="w-full font-semibold leading-normal text-gray-800">
-                                                                <NewTaskInput onSubmit={this.addNewTask} />
-                                                                <form onSubmit={this.onSubmitHandler} name="adicionar">
-                                                                    {this.state.metadados.map(({ nome, atributo }, index) => (
-                                                                        <ListItem
-                                                                            value={nome}
-                                                                            value1={atributo}
-                                                                            onChange={(event) => this.updateTask(event, index)}
-                                                                            onDelete={() => this.deleteTask(index)}
-                                                                        />
-                                                                    ))}
-                                                                    <br />
-                                                                </form>
-                                                            </div>
+                                                        <div class="w-full px-3 mb-6 md:mb-0 mt-4">
+                                                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-name">
+                                                                <FontAwesomeIcon icon="clock" /> Timestamp do pedido para este registo
+                                                                </label>
+                                                            <h3 className="text-2xl font-semibold leading-normal mb-2 text-pink-800 mb-2">
+                                                                {this.state.timestamp}
+                                                            </h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="w-full md:w-1/2">
+                                                    <div class="flex flex-wrap -mx-3 ">
+                                                        <div class="w-full px-3 mb-6 md:mb-0 mt-4">
+                                                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-name">
+                                                                <FontAwesomeIcon icon="info-circle" /> Descrição
+                                                                </label>
+                                                            <h3 className="text-2xl font-semibold leading-normal mb-2 text-gray-800 mb-2">
+                                                                {this.state.descricao}
+                                                            </h3>
+                                                        </div>
+                                                        <div class="w-full px-3 mb-6 md:mb-0 mt-4">
+                                                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-name">
+                                                                <FontAwesomeIcon icon="server" /> Registador/Proprietário
+                                                                </label>
+                                                            <h3 className="text-2xl font-semibold leading-normal mb-2 text-green-800 mb-2">
+                                                                {this.state.dono}
+                                                            </h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <form class="w-full pt-4" onSubmit={this.efetuaTransf}>
+                                                    <div class="flex flex-wrap -mx-3 mt-4 mb-4">
+                                                        <div class="w-full px-3 mb-6 md:mb-0">
+                                                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-nome">
+                                                                <FontAwesomeIcon icon="address-book" /> Inserir o endereço do Novo Proprietário para este documento:
+                                                                </label>
+                                                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-nome" name='nome' type="text" placeholder="Address" pattern="[^'\x22]+" onChange={this.myChangeHandler} required />
                                                         </div>
                                                     </div>
 
                                                     <button class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-3 px-4 rounded mb-10" type="submit">
-                                                        Registar Documento
+                                                        Efetuar Pedido Transferência
                                                         </button>
                                                 </form>
                                             </div>
@@ -300,3 +260,4 @@ export class RegistarDoc extends Component {
     }
 
 }
+
