@@ -14,9 +14,9 @@ namespace codeNotarization
         public static void Main(string[] args)
         {
             // Usado para o utilizador inserir a password do MySQL
-            //Console.WriteLine("Introduza a password do MySQL: ");
-            //string password = Console.ReadLine();
-            //Console.WriteLine("Password é: " + password);
+            Console.WriteLine("Introduza a password do MySQL: ");
+            string password = Console.ReadLine();
+            Settings.passMySQL = password;
 
             CreateHostBuilder(args).Build().Run();
         }

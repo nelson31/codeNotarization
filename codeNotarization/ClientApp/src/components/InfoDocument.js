@@ -135,12 +135,16 @@ export class InfoDocument extends Component {
                     this.props.history.push("/perfil");
                 })
                 .catch(error => {
-                    alert("O seu endereço não é válido, registe-se primeiro!!");
-                    this.setState({
-                        error1:
-                            "Houve um problema com o login, verifique as suas senhas."
-                    });
-                    this.props.history.push("/registar");
+                    if (error.response) {
+                        alert(error.response.data);
+                        this.setState({
+                            error1:
+                                "Houve um problema com o login, verifique as suas senhas."
+                        });
+                        if (error.response.status == 404) {
+                            this.props.history.push("/registar");
+                        }
+                    }
                 })
         }
     }

@@ -9,5 +9,7 @@ namespace codeNotarization
     {
         /* BlockNotarization_2021_LEI com SHA1*/
         public static string Secret = "cbf8b055126a50e397ee6522bf967076326468bc";
+        /* Password do MySQL*/
+        public static string passMySQL;
     }
 }

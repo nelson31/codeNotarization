@@ -24,7 +24,7 @@ namespace codeNotarization.DataBase
 			string server = "localhost";
 			string database = "notarization_db";
 			string uid = "root";
-			string password = "pass12345";
+			string password = Settings.passMySQL;
 			this.connectionstring = "SERVER=" + server + ";" + "DATABASE=" +
 			database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
 		}

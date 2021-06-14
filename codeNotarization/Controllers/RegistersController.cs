@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System;
 using codeNotarization.Backend;
 using codeNotarization.Services;
+using codeNotarization.Exceptions;
 
 namespace codeNotarization.Controllers
 {
@@ -56,9 +57,13 @@ namespace codeNotarization.Controllers
                 }
                 return Ok(reg);
             }
+            catch (UserNotRegistedException e)
+            {
+                return NotFound(e.Message);
+            }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest("Erro ao processar o Login!");
             }
         }
 

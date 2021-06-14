@@ -41,7 +41,7 @@ namespace codeNotarization.Backend
 
 			} catch(UserNotRegistedException e)
 			{
-				throw new UserNotRegistedException(e.Message);
+				throw new UserNotRegistedException("O seu endereço não é válido, registe-se primeiro!!");
 			}
 
 			return r;
