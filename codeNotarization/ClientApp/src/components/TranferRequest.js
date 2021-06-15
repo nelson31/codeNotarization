@@ -51,6 +51,7 @@ export class TransferRequest extends Component {
         // Buscar o hash do documento
         const hashDoc = localStorage.getItem('hashDoc');
         this.setState({ hash: hashDoc });
+        localStorage.removeItem('hashDoc');
 
         axios.get(`${DOCUMENTS_URL}`, {
             params: {

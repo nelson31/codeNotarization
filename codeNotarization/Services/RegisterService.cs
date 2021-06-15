@@ -19,7 +19,9 @@ namespace codeNotarization.Services
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim("Address", conta.Address),
-                    new Claim("Nome", conta.Name)
+                    new Claim("Nome", conta.Name),
+                    new Claim("Pais", conta.Pais),
+                    new Claim("Email", conta.Email)
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

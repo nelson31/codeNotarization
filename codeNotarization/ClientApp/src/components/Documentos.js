@@ -6,6 +6,7 @@ import { NavBarIn } from './NavBarIn';
 import { RodapePerfil } from './RodapePerfil';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import logo from './images/logo_blocknotarization.png';
+import Download from './Download';
 
 import api from './api';
 
@@ -64,6 +65,8 @@ export class Documentos extends Component {
     geraPdf = (event) => {
 
         let hash = event.target.dataset.id;
+
+        localStorage.setItem("hashDoc", hash);
 
         event.preventDefault();
     }
@@ -199,8 +202,8 @@ export class Documentos extends Component {
                                                                 <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{documento.hash}</td>
                                                                 <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{documento.descricao}</td>
                                                                 <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell">{documento.timestamp}</td>
-                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell"> <button class="hover:bg-blue-500 bg-blue-400 text-blue-dark font-semibold text-white py-2 px-3 border rounded" key={documento.hash} data-id={documento.hash} onClick={this.transferir}> Transferir Propriedade </button> </td>
-                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell"><button class="hover:bg-orange-500 bg-orange-400 text-blue-dark font-semibold text-white py-2 px-3 border rounded" key={documento.hash} data-id={documento.hash} onClick={this.geraPdf}> Gerar Pdf </button> </td>
+                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell"> <button class="hover:bg-orange-500 bg-orange-400 text-blue-dark font-semibold text-white py-2 px-3 border rounded" key={documento.hash} data-id={documento.hash} onClick={this.transferir}> Transferir Propriedade </button> </td>
+                                                                <td class="p-3 font-semibold border-top border-gray-300 hidden lg:table-cell"> <Download hash={documento.hash} /> </td>
                                                             </tr>)
                                                         }
 
