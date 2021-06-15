@@ -1,8 +1,6 @@
 ﻿import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { PDFViewer } from '@react-pdf/renderer';
 import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer';
-import ReactPDF from '@react-pdf/renderer';
 import decode from 'jwt-decode';
 import Logo from './images/logo_blocknotarization.png';
 import api from './api';
@@ -13,6 +11,7 @@ const borderColor = 'black'
 
 const styles = StyleSheet.create({
     image: { textAlign: 'center', marginVertical: 4, marginHorizontal: 10, top: 30 },
+    image1: { textAlign: 'center', top: 30, width: 150, height: 150, left: 180 },
     textImage: { fontSize: 60, textAlign: 'left' },
     certificado: { fontSize: 20, fontFamily: 'Times-Bold', left: 280, top: -50 },
     page: { padding: 45 },
@@ -42,6 +41,14 @@ const styles = StyleSheet.create({
         fontStyle: 'bold',
         flexGrow: 1,
         top: 40,
+    },
+    qrcode: {
+        flexDirection: 'row',
+        height: 20,
+        textAlign: 'center',
+        fontStyle: 'bold',
+        flexGrow: 1,
+        top: 100,
     },
     row: {
         flexDirection: 'row',
@@ -97,7 +104,8 @@ export class Certificado extends Component {
             data: '',
             hash: '',
             descricao: '',
-            timestamp: ''
+            timestamp: '',
+            linkQRCode: ''
         };
     }
 
@@ -111,6 +119,9 @@ export class Certificado extends Component {
         const hashDoc = localStorage.getItem('hashDoc');
         this.setState({ hash: hashDoc });
         localStorage.removeItem('hashDoc');
+        // Link para o QRCode
+        const linkQRCode = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + hashDoc;
+        this.setState({ linkQRCode: linkQRCode });
 
         // Data
         this.setState({ data: new Date().toLocaleString() });
@@ -208,11 +219,17 @@ export class Certificado extends Component {
                         <Text style={styles.descriptionrow}>Timestamp do registo</Text>
                         <Text style={styles.qtyrow}>{this.state.timestamp}</Text>
                     </View>
+
+                    <Image
+                        style={styles.image1}
+                        src={this.state.linkQRCode}
+                    />
+
                     <Text style={styles.pageNumbers} render={({ pageNumber, totalPages }) => (
                         `${pageNumber} / ${totalPages}`
                     )} fixed />
                 </Page>
-            </Document>
+                </Document>
         )
     }
 }
