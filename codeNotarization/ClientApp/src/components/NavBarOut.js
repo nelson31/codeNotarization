@@ -1,9 +1,7 @@
 ﻿import React, { Component } from 'react';
-import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link, Redirect } from 'react-router-dom';
 import Web3 from 'web3'
 import axios from 'axios';
-import { BLOCK_NOTARIZATION_ABI, BLOCK_NOTARIZATION_ADDRESS } from './configWeb3.js'
 import logo from './images/logo_blocknotarization.png';
 import { REGISTERS_URL } from './api';
 

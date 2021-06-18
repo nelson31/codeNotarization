@@ -1,5 +1,4 @@
 ﻿import React, { Component } from 'react';
-import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import decode from 'jwt-decode';
 import { NavBarIn } from './NavBarIn';
@@ -50,6 +49,7 @@ export class Documentos extends Component {
             });
     }
 
+    /* Transferencia de propriedade */
     transferir = (event) => {
 
         let hash = event.target.dataset.id;
@@ -60,15 +60,6 @@ export class Documentos extends Component {
 
         event.preventDefault();
 
-    }
-
-    geraPdf = (event) => {
-
-        let hash = event.target.dataset.id;
-
-        localStorage.setItem("hashDoc", hash);
-
-        event.preventDefault();
     }
 
     myChangeHandler = (event) => {

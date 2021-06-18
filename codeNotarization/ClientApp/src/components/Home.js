@@ -8,7 +8,6 @@ import Registry from '../abis/Registry.json'
 import LogoS from './images/logo.png';
 import logo from './images/logo_blocknotarization.png';
 import { Rodape } from './Rodape.js';
-import { NavBarOut } from './NavBarOut.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 
@@ -135,15 +134,6 @@ export class Home extends Component {
         let nam = event.target.name;
         let val = event.target.value;
         this.setState({ [nam]: val });
-    }
-
-    myFunction = () => {
-        var x = document.getElementById("myInput");
-        if (x.type === "password") {
-            x.type = "text";
-        } else {
-            x.type = "password";
-        }
     }
 
     render() {

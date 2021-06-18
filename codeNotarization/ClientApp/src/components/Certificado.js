@@ -1,5 +1,4 @@
 ﻿import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer';
 import decode from 'jwt-decode';
 import Logo from './images/logo_blocknotarization.png';
@@ -116,11 +115,9 @@ export class Certificado extends Component {
         this.setState({ email: decoded.Email });
         this.setState({ pais: decoded.Pais });
         // Buscar o hash do documento
-        const hashDoc = localStorage.getItem('hashDoc');
-        this.setState({ hash: hashDoc });
-        localStorage.removeItem('hashDoc');
+        this.setState({ hash: this.props.hash });
         // Link para o QRCode
-        const linkQRCode = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + hashDoc;
+        const linkQRCode = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + this.props.hash;
         this.setState({ linkQRCode: linkQRCode });
 
         // Data
@@ -128,7 +125,7 @@ export class Certificado extends Component {
 
         axios.get(`${DOCUMENTS_URL}`, {
             params: {
-                hash: hashDoc
+                hash: this.props.hash
             }
         })
             .then(res => {

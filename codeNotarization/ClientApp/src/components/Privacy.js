@@ -1,5 +1,4 @@
 ﻿import React, { Component } from 'react';
-import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import Web3 from 'web3'
 import axios from 'axios';
@@ -8,7 +7,6 @@ import { REGISTERS_URL } from './api';
 import { Rodape } from './Rodape';
 import LogoS from './images/logo.png';
 import logo from './images/logo_blocknotarization.png';
-import { NavBarOut } from './NavBarOut';
 
 export class Privacy extends Component {
     static displayName = Privacy.name;

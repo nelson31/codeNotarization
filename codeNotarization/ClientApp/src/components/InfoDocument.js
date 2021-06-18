@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Web3 from 'web3'
 import { Link } from 'react-router-dom';
 
-import { NavBarOut } from './NavBarOut';
 import { REGISTERS_URL, DOCUMENTS_URL } from './api';
 import logo from './images/logo_blocknotarization.png';
 import { Rodape } from './Rodape';
@@ -66,11 +65,6 @@ export class InfoDocument extends Component {
             .catch(error => {
                 alert("ERROR! " + error);
             });
-    }
-
-    mySubmitHandler = (event) => {
-        event.preventDefault();
-        alert("Falta definir as acoes para os eventos");
     }
 
     myChangeHandler = (event) => {
@@ -144,13 +138,6 @@ export class InfoDocument extends Component {
                     }
                 })
         }
-    }
-
-    // Submeter um novo usuario, caso o codigo esteja bem
-    handleCheck = (event) => {
-        event.preventDefault();
-
-        
     }
 
     nextPage = () => {

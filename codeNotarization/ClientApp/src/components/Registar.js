@@ -1,10 +1,8 @@
 ﻿import React, { Component } from 'react';
 import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Web3 from 'web3'
 import { Link } from 'react-router-dom';
 
-import { NavBarOut } from './NavBarOut';
 import { REGISTERS_URL } from './api';
 import logo from './images/logo_blocknotarization.png';
 import { Rodape } from './Rodape';
