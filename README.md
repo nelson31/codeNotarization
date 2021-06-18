@@ -23,7 +23,7 @@ Em primeiro lugar deixamos algumas das aplicações das quais o software desenvo
  - **_MySQL Workbench_** - <https://dev.mysql.com/doc/workbench/en/wb-installing-windows.html>
  - **_Truffle_** - <https://www.trufflesuite.com/docs/truffle/getting-started/installation>
  
-Depois de termos tudo devidamente instalado, podemos dar início à execução da aplicação, tendo em atenção que o Ganache deve ter os contratos migrados através do uso do truffle e a correr no localhost:8545 e os respetivos contratos JSON gerados na pasta [build/contracts](https://github.com/nelson31/codeNotarization/tree/master/smartNotarization/build/contracts) devem estar também na pasta [abis](https://github.com/nelson31/codeNotarization/tree/master/codeNotarization/ClientApp/src/abis).
+Depois de termos tudo devidamente instalado, podemos dar início à execução da aplicação, tendo em atenção que o Ganache deve ter os contratos migrados através do uso do truffle ($ truffle migrate) e a correr no localhost:8545 e os respetivos contratos JSON gerados na pasta [build/contracts](https://github.com/nelson31/codeNotarization/tree/master/smartNotarization/build/contracts) devem estar também na pasta [abis](https://github.com/nelson31/codeNotarization/tree/master/codeNotarization/ClientApp/src/abis).
 
 Além disso, é importante que a Base de Dados esteja desenvolvida, pelo que se usar o MySQL WorkBench é só pegar no [modelo lógico](https://github.com/nelson31/codeNotarization/blob/master/modeloLogicoBD_offchain.mwb) e fazer *Forward Engeneering* que este já gera a base de dados.
 
