@@ -6,8 +6,8 @@ BlockChain para Notarização de Documentos
 - :open_file_folder: **Diretoria [smartNotarization](https://github.com/nelson31/codeNotarization/tree/master/smartNotarization)** que possui todos os Ficheiros e Diretorias para a migração e testagem dos *smart contracts*
 - :bookmark_tabs: Ficheiro [modeloLogicoBD_offchain.mwb](https://github.com/nelson31/codeNotarization/blob/master/modeloLogicoBD_offchain.mwb) que contém o modelo lógico da Base de Dados SQL que pode ser aberto com o *MySQL Workbench*
 - :open_file_folder: **Diretoria [codeNotarization](https://github.com/nelson31/codeNotarization/tree/master/codeNotarization)** que possui todos os Ficheiros e Diretorias da aplicação, tanto o FrontEnd como o Backend
-- :open_file_folder: **Diretoria [ClientApp](https://github.com/nelson31/codeNotarization/tree/master/codeNotarization/ClientApp)** que possui todos os Ficheiros e Diretorias necessárias ao FrontEnd da aplicação
-- :open_file_folder: **Diretoria [Backend](https://github.com/nelson31/codeNotarization/tree/master/codeNotarization/Backend)** que possui todos os Ficheiros e Diretorias necessárias ao BackEnd da plicação, principalmente os DAOs (*Data Access Objects*) para acesso à Base de Dados
+  - :open_file_folder: **Diretoria [ClientApp](https://github.com/nelson31/codeNotarization/tree/master/codeNotarization/ClientApp)** que possui todos os Ficheiros e Diretorias necessárias ao FrontEnd da aplicação
+  - :open_file_folder: **Diretoria [Backend](https://github.com/nelson31/codeNotarization/tree/master/codeNotarization/Backend)** que possui parte dos Ficheiros e Diretorias necessárias ao BackEnd da aplicação, principalmente os DAOs (*Data Access Objects*) para acesso à Base de Dados
 - :bookmark_tabs: Ficheiro [codeNotarization.sln](https://github.com/nelson31/codeNotarization/blob/master/codeNotarization.sln) que pode ser ser aberto usando Visual Studio 2019, sendo que irá automáticamente abrir e configurar todo o projeto
 
 <br/>
