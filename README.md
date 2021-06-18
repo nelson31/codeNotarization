@@ -28,3 +28,6 @@ Depois de termos tudo devidamente instalado, podemos dar início à execução d
 Além disso, é importante que a Base de Dados esteja desenvolvida, pelo que se usar o MySQL WorkBench é só pegar no modelo lógico e fazer *Forward Engeneering* que este já gera a base de dados.
 
 Depois, ao correr no Visual Studio 2019, este deverá só na linha de comandos pedir a password do MySQL e depois de inserida a aplicação já deverá estar operacional.
+
+Nota para o facto de que enquanto se executa a aplicação, o **Ganache** deve estar sempre a correr, além disso para ser possível criar uma conta e fazer login necessita de ter o plugin **Metamask** com uma conta válida que pertença ao **Ganache**, bastando para isso fazer import de uma conta através da chave privada de uma conta do **Ganache**.
+
