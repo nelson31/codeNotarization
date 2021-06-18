@@ -1,4 +1,4 @@
-# Código do Projeto de LEI
+# Código do Projeto de LEI (BlockNotarization)
 BlockChain para Notarização de Documentos
 
 **Este repositório encontra-se organizado da seguinte forma:**
